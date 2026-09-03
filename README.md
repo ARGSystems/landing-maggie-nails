@@ -48,8 +48,9 @@ LANDING MAGGIE NAILS/
 │   └── maggienails.css        # Estilos propios: animaciones, lightbox, footer, Swiper
 ├── scripts/
 │   └── main.js                # Interacciones: reveal, contadores, carrusel, lightbox
-├── assets/                    # Logos, isotipos, patrones decorativos, favicon
-├── images/                    # Fotos de la galería de trabajos
+├── assets/                    # SOLO lo que el sitio sirve (8 archivos WebP/PNG)
+├── marca/                     # Archivos originales de diseño (ver marca/README.md)
+├── images/                    # Fotos de la galería: PNG originales + WebP generados
 └── .gitignore
 ```
 
@@ -113,9 +114,13 @@ prioridad sobre el CSS propio. Subir ese `<link>` invertiría la cascada y rompe
 
 ## 🖼️ Cómo se manejan las imágenes
 
-Los PNG originales se conservan en `images/` y `assets/` como **fuente**, pero el sitio
-**no los sirve**: sirve los WebP que genera `npm run optimizar:imagenes`. Al agregar una
-foto nueva hay que correr ese comando y commitear los WebP resultantes.
+El proyecto separa **fuente** de **lo que se sirve**:
+
+- `marca/` y los PNG de `images/` son los **originales**. El sitio no los descarga nunca.
+- `assets/` y los `.webp` de `images/` son lo que el navegador sí baja, y se **generan**
+  con `npm run optimizar:imagenes`.
+
+Al agregar una foto nueva hay que correr ese comando y commitear los WebP resultantes.
 
 Los tamaños no son arbitrarios: salen de medir el ancho real de render de cada imagen en
 390 / 768 / 1440 px y multiplicar por 3, para cubrir pantallas con densidad DPR 3.

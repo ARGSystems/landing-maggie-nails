@@ -28,23 +28,23 @@ const TAREAS = [
   // del archivo. Si el resize la redondea, el elemento cambia de tamano y corre el
   // layout de toda la pagina. 750x842 conserva 1875:2105 exacto (= 375:421);
   // 652x130 aproxima 2287:456 con un error de 0.0012 px, bajo el cuanto de Blink (1/64).
-  ['assets/logo header2.png',    'assets/logo-header.webp', 652, { lossless: true }],
-  ['assets/Recurso 1 logo2.png', 'assets/logo-maggie.webp', 750, { lossless: true }],
+  ['marca/logo header2.png',    'assets/logo-header.webp', 652, { lossless: true }],
+  ['marca/Recurso 1 logo2.png', 'assets/logo-maggie.webp', 750, { lossless: true }],
 
   // --- Decoraciones de fondo (van en maggienails.css) ---
   // Pattern1 es 4509x4621 y se dibuja como mosaico de 300px: 20 megapixeles
   // decodificados para pintar un patron chiquito.
-  ['assets/Pattern1.png', 'assets/pattern1.webp', 600, { quality: 80 }],
-  ['assets/Polish1.png',  'assets/polish1.webp',  500, { quality: 85 }],
-  ['assets/Polish2.png',  'assets/polish2.webp',  500, { quality: 85 }],
+  ['marca/Pattern1.png', 'assets/pattern1.webp', 600, { quality: 80 }],
+  ['marca/Polish1.png',  'assets/polish1.webp',  500, { quality: 85 }],
+  ['marca/Polish2.png',  'assets/polish2.webp',  500, { quality: 85 }],
 
   // --- Fondo del hero (descargado de Unsplash y self-hosteado) ---
-  ['assets/hero-origen.jpg', 'assets/hero.webp',        1920, { quality: 72 }],
-  ['assets/hero-origen.jpg', 'assets/hero-movil.webp',  1000, { quality: 72 }],
+  ['marca/hero-origen.jpg', 'assets/hero.webp',        1920, { quality: 72 }],
+  ['marca/hero-origen.jpg', 'assets/hero-movil.webp',  1000, { quality: 72 }],
 ];
 
 // El favicon queda en PNG (formato universal para iconos), solo se achica.
-const FAVICON = ['assets/favicon1.png', 'assets/favicon.png', 192];
+const FAVICON = ['marca/favicon1.png', 'assets/favicon.png', 192];
 
 let antes = 0, despues = 0;
 console.log('origen                          ->  salida                        antes    despues   ahorro');

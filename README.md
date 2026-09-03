@@ -276,6 +276,55 @@ incoherente. La honestidad se resuelve con el texto, no eliminando la sección.
 El aviso lleva `role="status"` y `aria-live="polite"` para que un lector de pantalla lo anuncie
 al aparecer.
 
+## 🧭 Hero y navegación
+
+### El hero se centra, no se rellena
+
+Antes el `<header id="inicio">` no tenía altura propia: la simulaba con relleno fijo
+(`pt-16 pb-12 md:py-32 lg:py-40`). El resultado era que el alto dependía del padding y no de la
+pantalla: en un portátil de 1512x780 el header medía 956px, el `<h1>` recién aparecía a los
+458px y la franja de confianza quedaba cortada abajo.
+
+Ahora `.hero-bg` ocupa **la pantalla menos el alto del nav** y centra el contenido con flex:
+
+```css
+--nav-alto: 4.75rem;                      /* cambia por breakpoint */
+min-height: calc(100vh - var(--nav-alto));
+min-height: calc(100svh - var(--nav-alto));
+display: flex;
+align-items: center;
+```
+
+Tres detalles del porqué:
+
+- **Las dos declaraciones de `min-height` no son un error.** `svh` es la unidad que descuenta
+  las barras del navegador móvil, pero los navegadores viejos no la entienden: el que no la
+  soporte ignora la segunda línea y se queda con `vh`.
+- **Se descuenta el alto del nav** para que el hero no sobresalga justo esa cantidad y obligue a
+  scrollear. Los tres valores (76 / 84 / 68 px) salen de **medir el nav en el navegador**, no de
+  estimarlos: el alto lo manda el botón hamburguesa, que es más alto que el logo.
+- **El padding bajó a `py-12 md:py-16`.** Ya no empuja el contenido al medio; queda solo como
+  margen de respiro para pantallas muy bajas donde el contenido no entra.
+
+Resultado medido: el H1, los botones y la franja de confianza entran sin scroll en 375, 768,
+1440, 1512 y 1920 px, y el header no salta más de **16px** entre breakpoints.
+
+### El nav pasa a íconos desde 1024px
+
+Los 7 links llevan un ícono SVG de 16px (20px en el menú móvil) con el mismo estilo de trazo que
+el hamburguesa. Se definen **una sola vez** en un sprite `<symbol>` al inicio del `<body>` y
+cada link lo referencia con `<use href="#ico-...">`: son 7 íconos en 14 lugares, repetirlos
+inline habría inflado el HTML sin necesidad. Van con `aria-hidden` porque son decorativos —
+el texto del link ya dice a dónde va.
+
+`¿Por qué elegirnos?` pasó a **`Beneficios`** en el nav: era una pregunta completa entre
+etiquetas de una palabra. El `href="#beneficios"` y el `<h2>` de la sección quedaron intactos.
+
+> **El menú de escritorio ahora aparece desde `lg:` (1024px), no desde `md:` (768px).** Con los
+> íconos, los 7 links dejaron de entrar junto al logo hasta ~950px. Entre 768 y 1023px se usa el
+> menú hamburguesa, que ya funcionaba. Esto además arregla de paso el nav apretado que el sitio
+> arrastraba desde el commit inicial en ese mismo rango.
+
 ## 📊 Resultados medidos
 
 Lighthouse (móvil, CPU x4, 1638 Kbps, RTT 150 ms), comparando el estado inicial contra el actual:
@@ -335,16 +384,6 @@ Cosas detectadas y **no** corregidas, porque implican decisiones de diseño o de
    de marca o el texto: **es un cambio visual**.
 3. **Salto en la jerarquía de encabezados.** El footer usa `<h4>` después de un `<h2>`,
    salteando `<h3>`. Cambiar el nivel afecta los estilos asociados.
-
-### Nav apretado entre 768px y ~825px
-
-En ese rango el logo y el link "Inicio" quedan **pegados sin separación**, y "¿Por qué
-elegirnos?" se parte en dos líneas. Desde 830px en adelante está bien.
-
-**Es preexistente**, no lo introdujo ninguna de estas fases: se verificó midiendo el nav en el
-commit inicial y da exactamente lo mismo (hueco de 0px, mismo link partido). Se arregla subiendo
-el breakpoint del menú de escritorio de `md:` a `lg:`, o achicando el espaciado en ese rango
-— las dos cosas cambian cómo se ve.
 
 ### Otros
 

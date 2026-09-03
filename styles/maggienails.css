@@ -70,6 +70,27 @@ html {
     background-image:
         linear-gradient(rgba(26, 11, 46, 0.25), rgba(26, 11, 46, 0.25)),
         url('../assets/hero-movil.webp');
+
+    /* Ocupa la pantalla menos el alto del nav, y centra el contenido de verdad
+       en vez de empujarlo con padding fijo. Descontar el nav evita que el hero
+       sobresalga justo esa cantidad y obligue a scrollear.
+
+       Van dos declaraciones a propósito: svh es la unidad que descuenta las
+       barras del navegador móvil, pero no la entienden los navegadores viejos.
+       El que no la soporte ignora la segunda línea y se queda con vh. */
+    /* Los tres valores salen de medir el nav en el navegador, no de estimarlos:
+       el alto lo manda el botón hamburguesa (52px), más alto que el logo. */
+    --nav-alto: 4.75rem;              /* 76px  — hasta 767px: py-3 + hamburguesa */
+    min-height: calc(100vh - var(--nav-alto));
+    min-height: calc(100svh - var(--nav-alto));
+    display: flex;
+    align-items: center;
+}
+@media (min-width: 768px) {
+    .hero-bg { --nav-alto: 5.25rem; } /* 84px  — 768 a 1023px: py-4 + hamburguesa */
+}
+@media (min-width: 1024px) {
+    .hero-bg { --nav-alto: 4.25rem; } /* 68px  — desde 1024px: py-4 + logo h-9 */
 }
 @media (min-width: 768px) {
     .hero-bg {

@@ -8,6 +8,7 @@
     "build:css": "tailwindcss -i ./styles/tailwind.src.css -o ./styles/tailwind.css --minify",
     "dev:css": "tailwindcss -i ./styles/tailwind.src.css -o ./styles/tailwind.css --watch",
     "optimizar:imagenes": "node tools/optimizar-imagenes.mjs",
+    "fuentes": "node tools/descargar-fuentes.mjs",
     "prepare": "npm run build:css"
   },
   "devDependencies": {

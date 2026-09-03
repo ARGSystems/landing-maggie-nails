@@ -42,10 +42,18 @@
     <!-- Conexión al CSS externo -->
     <link rel="stylesheet" href="styles/maggienails.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <!-- Tipografias self-hosteadas. Antes venian de fonts.googleapis.com, lo que
+         le mandaba a Google la IP y el user-agent de cada visitante. Se regeneran
+         con: npm run fuentes -->
+    <link rel="stylesheet" href="styles/fuentes.css">
 
     <!-- Swiper.js (carrusel de la galería) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Version exacta (antes era @11, que resolvia a la ultima 11.x y podia
+         cambiar sola). integrity hace que el navegador verifique el hash del
+         archivo y lo rechace si el CDN sirviera algo distinto. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
+          integrity="sha384-gAPqlBuTCdtVcYt9ocMOYWrnBZ4XSL6q+4eXqwNycOr4iFczhNKtnYhF3NEXJM51"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Tailwind compilado con la CLI (reemplaza al Play CDN).
          Va ULTIMO a proposito: el Play CDN inyectaba su <style> al final del <head>,
@@ -453,7 +461,7 @@
 
     <!-- Banner de Instagram -->
     <section class="py-12 md:py-24 relative overflow-hidden hero-gradient text-white text-center">
-        <div class="decoracion-mancha mancha-top-right float-slow" style="opacity:.08"></div>
+        <div class="decoracion-mancha mancha-top-right float-slow opacity-[0.08]"></div>
         <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
         <div class="max-w-xl mx-auto reveal">
             <p class="text-gold-300 text-sm font-semibold mb-3">Seguinos</p>
@@ -534,7 +542,7 @@
             <div class="lg:col-span-3 flex flex-col items-center sm:items-start">
                 <h4 class="text-white font-serif font-bold text-lg mb-6">Novedades</h4>
                 <p class="text-sm text-maggie-300 mb-4 text-center sm:text-left">Sumate para enterarte antes que nadie de promos y diseños nuevos.</p>
-                <form onsubmit="event.preventDefault();" class="w-full max-w-xs flex items-center gap-2">
+                <form id="formNewsletter" class="w-full max-w-xs flex items-center gap-2">
                     <label for="newsletterEmail" class="sr-only">Correo electrónico</label>
                     <input id="newsletterEmail" type="email" required placeholder="tu@email.com" class="w-full bg-white/10 border border-white/20 rounded-full px-4 py-2.5 text-sm text-white placeholder-maggie-300 focus:outline-none focus:border-gold-500 transition-colors">
                     <button type="submit" aria-label="Suscribirme" class="flex-shrink-0 bg-gold-500 hover:bg-gold-300 text-maggie-900 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
@@ -556,53 +564,22 @@
 </footer>
 
     <!-- Botón flotante para subir -->
-    <button id="btnSubir" onclick="window.scrollTo(0,0)" class="fixed bottom-6 right-6 bg-purple-800 text-white p-3 rounded-full shadow-lg hover:bg-purple-900 transition-all duration-300 opacity-0 pointer-events-none z-50">
+    <button id="btnSubir" class="fixed bottom-6 right-6 bg-purple-800 text-white p-3 rounded-full shadow-lg hover:bg-purple-900 transition-all duration-300 opacity-0 pointer-events-none z-50">
         <!-- Icono de flecha hacia arriba (Heroicons) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
     </button>
 
-    <!-- Script para controlar cuándo aparece y desaparece -->
-    <script>
-        const btnSubir = document.getElementById('btnSubir');
-
-        window.addEventListener('scroll', () => {
-            // Si el usuario bajó más de 300 píxeles, mostramos el botón
-            if (window.scrollY > 300) {
-                btnSubir.classList.remove('opacity-0', 'pointer-events-none');
-                btnSubir.classList.add('opacity-100');
-            } else {
-                // Si está arriba, lo ocultamos
-                btnSubir.classList.add('opacity-0', 'pointer-events-none');
-                btnSubir.classList.remove('opacity-100');
-            }
-        });
-    </script>
-
-<!-- Script para el Menú Desplegable Móvil -->
-    <script>
-        const btnMenu = document.getElementById('btnMenu');
-        const menuMovil = document.getElementById('menuMovil');
-        const opcionesMenu = document.querySelectorAll('.menu-item');
-
-        // Abre y cierra el menú al tocar la hamburguesa (con animación suave vía CSS)
-        btnMenu.addEventListener('click', () => {
-            const abierto = menuMovil.classList.toggle('menu-open');
-            btnMenu.setAttribute('aria-expanded', abierto);
-        });
-
-        // Cierra el menú automáticamente cuando el usuario elige una opción
-        opcionesMenu.forEach(opcion => {
-            opcion.addEventListener('click', () => {
-                menuMovil.classList.remove('menu-open');
-                btnMenu.setAttribute('aria-expanded', 'false');
-            });
-        });
-    </script>
+    <!-- Interacciones de UI: boton "subir" y menu movil.
+         Estaban inline; se movieron a un archivo para que la CSP pueda ser
+         script-src 'self' sin depender de hashes. -->
+    <script src="scripts/ui.js"></script>
 
     <!-- Swiper.js (carrusel de la galería) -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
+            integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Script de interacciones visuales (revelado al scroll, contadores, carrusel, lightbox) -->
     <script src="scripts/main.js"></script>

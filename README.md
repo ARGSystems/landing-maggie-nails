@@ -42,8 +42,11 @@ LANDING MAGGIE NAILS/
 ├── sitemap.xml                # Una sola URL: el sitio es de una página
 ├── package.json               # Dependencias y scripts de build
 ├── tailwind.config.js         # Tema de Tailwind: paleta maggie/gold y tipografías
+├── netlify.toml               # Configuración de deploy y headers de seguridad
+├── fonts/                     # Tipografías self-hosteadas (.woff2)
 ├── tools/
-│   └── optimizar-imagenes.mjs # Genera los WebP a partir de los PNG originales
+│   ├── optimizar-imagenes.mjs # Genera los WebP a partir de los PNG originales
+│   └── descargar-fuentes.mjs  # Baja las tipografías y arma styles/fuentes.css
 ├── styles/
 │   ├── tailwind.src.css       # FUENTE de Tailwind (se edita esto)
 │   ├── tailwind.css           # CSS COMPILADO (generado — no editar a mano)
@@ -79,6 +82,7 @@ Instala las dependencias y **compila el CSS automáticamente** (el script `prepa
 | `npm run build:css` | Compila `styles/tailwind.src.css` → `styles/tailwind.css` minificado |
 | `npm run dev:css` | Igual, pero en modo *watch*: recompila solo al guardar cambios |
 | `npm run optimizar:imagenes` | Regenera los WebP desde los PNG originales (solo al agregar fotos) |
+| `npm run fuentes` | Vuelve a bajar las tipografías de Google y regenera `styles/fuentes.css` |
 
 ### Flujo de trabajo diario
 
@@ -199,6 +203,58 @@ mismo documento, no URLs independientes: listarlas sería declarar contenido dup
 
 Permite todo salvo `/marca/`, que son los archivos originales de diseño. No aportan nada en
 buscadores y no tiene sentido gastar presupuesto de rastreo en ellos.
+
+## 🔒 Seguridad
+
+### Headers
+
+Se configuran en `netlify.toml`. En criollo, qué previene cada uno:
+
+| Header | Qué ataque frena |
+|---|---|
+| `Content-Security-Policy` | **Inyección de código (XSS).** Declara de qué dominios se puede cargar cada tipo de recurso. Si alguien lograra meter un `<script>` en la página, el navegador se niega a ejecutarlo porque su origen no está en la lista. |
+| `X-Content-Type-Options: nosniff` | **Confusión de tipo de archivo.** Sin esto, el navegador "adivina" qué es un archivo mirando su contenido. Un .txt con código JS adentro podía terminar ejecutándose. Esto lo obliga a respetar el `Content-Type` declarado. |
+| `Referrer-Policy` | **Fuga de información al salir del sitio.** Al hacer clic en un link externo el navegador le cuenta al destino de dónde venís. Con esto, hacia afuera solo se manda el dominio, nunca la ruta ni los parámetros. |
+| `Permissions-Policy` | **Abuso de APIs del navegador.** Apaga cámara, micrófono, ubicación, pagos y demás. Si algo lograra ejecutar código en la página, igual no podría pedirlos. |
+| `X-Frame-Options: DENY` + `frame-ancestors 'none'` | **Clickjacking.** Impide que otro sitio meta esta página dentro de un `<iframe>` invisible y te haga tocar botones que no ves. Van los dos: `frame-ancestors` es el moderno, `X-Frame-Options` cubre navegadores viejos. |
+
+`Strict-Transport-Security` no está en el archivo porque **Netlify ya lo manda solo** en los dominios `.netlify.app`.
+
+### Detalles de la CSP
+
+No usa `'unsafe-inline'` ni en scripts ni en estilos. Para lograrlo hubo que sacar del HTML:
+
+- los dos `<script>` inline → `scripts/ui.js`
+- `onclick="window.scrollTo(0,0)"` del botón subir → `addEventListener` en `ui.js`
+- `onsubmit="event.preventDefault();"` del newsletter → `addEventListener` en `ui.js`
+- el único `style="opacity:.08"` → la clase `opacity-[0.08]`
+
+> Se descartó la alternativa de permitir esos scripts con hashes (`'sha256-...'`). Un hash se
+> rompe con cualquier edición del script, y como los headers **solo se aplican en producción**,
+> el menú seguiría funcionando en local y quedaría roto en el sitio publicado sin aviso.
+
+`font-src` incluye `data:` porque Swiper embebe su fuente de íconos (las flechas del carrusel)
+como data URI dentro de su propio CSS. Es la única concesión de la política.
+
+### Swiper fijado con SRI
+
+```
+swiper@11.2.10  +  integrity="sha384-..."  +  crossorigin="anonymous"
+```
+
+Antes decía `swiper@11`, que resuelve a la última 11.x: el CDN podía servir una versión distinta
+de un día para el otro. Ahora la versión es exacta y el atributo `integrity` hace que el navegador
+calcule el hash del archivo descargado y lo **rechace** si no coincide — protege si el CDN llegara
+a ser comprometido.
+
+### Tipografías self-hosteadas
+
+Antes venían de `fonts.googleapis.com`. Cada visita le mandaba a Google la IP, el user-agent y la
+página de referencia del visitante, y obligaba a abrir conexión con dos dominios más antes de poder
+pintar texto. Ahora viven en `fonts/` y la CSP puede decir `font-src 'self'`.
+
+Se descargan solo los subsets `latin` y `latin-ext`: los acentos y signos del castellano entran
+todos en `latin`. Verificado que el render es **idéntico píxel a píxel** al de Google Fonts.
 
 ## 🌐 Despliegue
 

@@ -11,3 +11,53 @@
   # que Netlify no necesita construir nada: publica los archivos tal cual.
   # Esto también evita que un fallo de npm pueda tumbar un deploy de producción.
   command = ""
+
+
+# ---------------------------------------------------------------------------
+# Headers de seguridad
+#
+# Nota: Strict-Transport-Security no está acá porque Netlify ya lo manda solo
+# (max-age=31536000; includeSubDomains; preload) en los dominios .netlify.app.
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+
+  [headers.values]
+    # --- Content-Security-Policy ---
+    # Declara de qué orígenes puede cargar cada tipo de recurso. Si un atacante
+    # logra inyectar un <script> en la página, el navegador lo bloquea porque el
+    # origen no está en la lista.
+    #
+    #   default-src 'self'          todo lo no declarado abajo: solo este dominio
+    #   script-src                  JS propio + Swiper desde jsDelivr
+    #   style-src                   CSS propio + el de Swiper. Sin 'unsafe-inline':
+    #                               no queda ningún style="" ni <style> en el HTML
+    #   img-src ... data:           imágenes propias; data: lo usan los íconos SVG
+    #                               embebidos en el CSS de Swiper
+    #   font-src ... data:          tipografías self-hosteadas en /fonts, y data: porque
+    #                               Swiper embebe su fuente de íconos (las flechas del
+    #                               carrusel) como data URI dentro de su propio CSS
+    #   connect-src 'self'          la página no hace fetch/XHR a ningún lado
+    #   form-action 'none'          ningún formulario puede enviarse a ninguna URL.
+    #                               El de newsletter es solo visual
+    #   frame-ancestors 'none'      nadie puede meter el sitio en un iframe
+    #   base-uri 'none'             impide inyectar un <base> que redirija las rutas
+    #   object-src 'none'           sin Flash, applets ni plugins
+    #   upgrade-insecure-requests   fuerza https en cualquier recurso pedido por http
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests"
+
+    # Obliga al navegador a respetar el Content-Type declarado en vez de adivinarlo
+    # mirando el contenido del archivo.
+    X-Content-Type-Options = "nosniff"
+
+    # Cuánta información de origen se manda al salir del sitio. Dentro del mismo
+    # dominio va la URL completa; hacia afuera (WhatsApp, Instagram) solo el
+    # dominio, nunca la ruta ni los parámetros.
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Desactiva APIs del navegador que el sitio no usa. Si algo lograra ejecutar
+    # código en la página, igual no podría pedir cámara, micrófono ni ubicación.
+    Permissions-Policy = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), xr-spatial-tracking=()"
+
+    # Versión antigua de frame-ancestors, para navegadores que no leen la CSP.
+    X-Frame-Options = "DENY"

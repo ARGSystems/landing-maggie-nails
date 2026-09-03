@@ -6,7 +6,7 @@
     <title>Maggie Nails | Uñas que te acompañan</title>
     <meta name="description" content="Maggie Nails: nail studio en Salta, Argentina. Semipermanente, Kapping, Soft Gel y Poly Gel con diseños exclusivos y máxima durabilidad.">
     <!-- Agregalo dentro de tu <head> -->
-    <link rel="icon" type="image/png" href="assets/favicon1.png" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
 
     <!-- Conexión al CSS externo -->
     <link rel="stylesheet" href="styles/maggienails.css">
@@ -22,6 +22,11 @@
          <link> hacia arriba invertiria esa prioridad y romperia el diseno.
          Se regenera con: npm run build  (fuente: styles/tailwind.src.css) -->
     <link rel="stylesheet" href="styles/tailwind.css">
+
+    <!-- El fondo del hero es el elemento LCP. Al venir de CSS, el navegador recien lo
+         descubre despues de bajar y parsear el CSS: el preload lo adelanta. -->
+    <link rel="preload" as="image" href="assets/hero-movil.webp" media="(max-width: 767px)">
+    <link rel="preload" as="image" href="assets/hero.webp" media="(min-width: 768px)">
 </head>
 <body class="bg-maggie-100 text-gray-800 font-sans antialiased">
 
@@ -31,7 +36,7 @@
 
             <!-- Logo y Texto -->
             <a href="#inicio" class="flex items-center gap-3 transition-transform hover:scale-105">
-                <img src="assets/logo header2.png" alt="Icono Maggie Nails" class="h-7 md:h-9 w-auto drop-shadow-md">
+                <img src="assets/logo-header.webp" alt="Icono Maggie Nails" width="652" height="130" fetchpriority="high" decoding="async" class="h-7 md:h-9 w-auto drop-shadow-md">
             </a>
 
             <!-- Botón de Menú Hamburguesa (Solo visible en celulares, touch target amplio) -->
@@ -68,7 +73,7 @@
     </nav>
 
     <!-- Header / Hero Section -->
-    <header id="inicio" class="scroll-mt-24 relative overflow-hidden text-white bg-maggie-900 bg-cover bg-center" style="background-image: linear-gradient(rgba(26,11,46,0.25), rgba(26,11,46,0.25)), url('https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&amp;w=2000&amp;auto=format&amp;fit=crop');">
+    <header id="inicio" class="hero-bg scroll-mt-24 relative overflow-hidden text-white bg-maggie-900 bg-cover bg-center">
         <!-- Overlay: oscuro y sólido en móvil, degradado de izquierda a derecha en escritorio -->
         <div class="absolute inset-0 bg-[#1a0b2e]/70 md:hidden"></div>
         <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-[#1a0b2e] via-[#1a0b2e]/80 to-transparent"></div>
@@ -76,7 +81,7 @@
         <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 pt-16 pb-12 md:py-32 lg:py-40 flex flex-col items-center text-center md:items-start md:text-left">
             <div class="w-full md:max-w-lg">
 
-                <img src="assets/Recurso 1 logo2.png" alt="Logo Maggie Nails" class="animate-fade-up w-28 sm:w-32 md:w-44 mb-5 md:mb-8 drop-shadow-lg">
+                <img src="assets/logo-maggie.webp" alt="Logo Maggie Nails" width="750" height="842" fetchpriority="high" decoding="async" class="animate-fade-up w-28 sm:w-32 md:w-44 mb-5 md:mb-8 drop-shadow-lg">
 
                 <h1 class="animate-fade-up delay-1 font-accent italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] leading-tight text-maggie-300 mb-3 md:mb-4">
                     Trabajo real, resultados reales.
@@ -144,7 +149,7 @@
         <div class="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
             <div class="reveal relative">
                 <div class="absolute -inset-4 bg-gradient-to-br from-maggie-300/40 to-gold-300/40 rounded-[2rem] blur-2xl"></div>
-                <img src="images/img2.png" alt="Trabajo de uñas realizado en Maggie Nails" class="relative rounded-[2rem] shadow-2xl w-full h-[260px] sm:h-[320px] md:h-[420px] object-cover border-4 border-white">
+                <img src="images/img2.webp" srcset="images/img2-400.webp 400w, images/img2-800.webp 800w, images/img2.webp 1080w" sizes="(min-width: 1024px) 520px, (min-width: 640px) 45vw, 92vw" alt="Trabajo de uñas realizado en Maggie Nails" width="1080" height="1076" loading="lazy" decoding="async" class="relative rounded-[2rem] shadow-2xl w-full h-[260px] sm:h-[320px] md:h-[420px] object-cover border-4 border-white">
                 <div class="hidden md:flex absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl px-6 py-4 items-center gap-3 border border-maggie-200">
                     <span class="text-3xl font-serif font-bold text-maggie-900"><span data-counter="1200">0</span>+</span>
                     <span class="text-xs text-gray-500 leading-tight max-w-[90px]">diseños realizados con amor</span>
@@ -244,7 +249,7 @@
                     <!-- Foto 1 -->
                     <div class="swiper-slide">
                         <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
-                            <img src="images/img1.png" alt="Diseño de uñas 1" data-lightbox class="w-full aspect-square object-cover">
+                            <img src="images/img1.webp" srcset="images/img1-400.webp 400w, images/img1-800.webp 800w, images/img1.webp 1080w" sizes="(min-width: 640px) 360px, 92vw" alt="Diseño de uñas 1" data-lightbox width="1080" height="1080" loading="lazy" decoding="async" class="w-full aspect-square object-cover">
                             <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
                         </div>
                     </div>
@@ -252,7 +257,7 @@
                     <!-- Foto 2 -->
                     <div class="swiper-slide">
                         <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
-                            <img src="images/img2.png" alt="Diseño de uñas 2" data-lightbox class="w-full aspect-square object-cover">
+                            <img src="images/img2.webp" srcset="images/img2-400.webp 400w, images/img2-800.webp 800w, images/img2.webp 1080w" sizes="(min-width: 640px) 360px, 92vw" alt="Diseño de uñas 2" data-lightbox width="1080" height="1076" loading="lazy" decoding="async" class="w-full aspect-square object-cover">
                             <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
                         </div>
                     </div>
@@ -260,7 +265,7 @@
                     <!-- Foto 3 -->
                     <div class="swiper-slide">
                         <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
-                            <img src="images/img3.png" alt="Diseño de uñas 3" data-lightbox class="w-full aspect-square object-cover">
+                            <img src="images/img3.webp" srcset="images/img3-400.webp 400w, images/img3-800.webp 800w, images/img3.webp 1080w" sizes="(min-width: 640px) 360px, 92vw" alt="Diseño de uñas 3" data-lightbox width="1080" height="1077" loading="lazy" decoding="async" class="w-full aspect-square object-cover">
                             <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
                         </div>
                     </div>
@@ -268,7 +273,7 @@
                     <!-- Foto 4 -->
                     <div class="swiper-slide">
                         <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
-                            <img src="images/img4.png" alt="Diseño de uñas 4" data-lightbox class="w-full aspect-square object-cover">
+                            <img src="images/img4.webp" srcset="images/img4-400.webp 400w, images/img4-800.webp 800w, images/img4.webp 1080w" sizes="(min-width: 640px) 360px, 92vw" alt="Diseño de uñas 4" data-lightbox width="1080" height="1079" loading="lazy" decoding="async" class="w-full aspect-square object-cover">
                             <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
                         </div>
                     </div>
@@ -442,7 +447,7 @@
 
             <!-- Marca y Ubicación -->
             <div class="lg:col-span-4 flex flex-col items-center sm:items-start gap-4">
-                <img src="assets/Recurso 1 logo2.png" alt="Maggie Nails" class="h-16 drop-shadow-md">
+                <img src="assets/logo-maggie.webp" alt="Maggie Nails" width="750" height="842" loading="lazy" decoding="async" class="h-16 w-auto drop-shadow-md">
                 <p class="text-sm text-maggie-300 leading-relaxed max-w-xs">
                     Nail studio dedicado a la durabilidad y al detalle: cada set se piensa para que tus manos hablen por vos.
                 </p>

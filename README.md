@@ -30,6 +30,7 @@ Sitio estático servido tal cual, con un único paso de build local para compila
 | CSS propio | `styles/maggienails.css` — estilos y animaciones que no cubre Tailwind |
 | JavaScript vainilla | `scripts/main.js` — interacciones (reveal, contadores, lightbox) |
 | [Swiper.js](https://swiperjs.com/) (vía CDN) | Carrusel de la galería |
+| [sharp](https://sharp.pixelplumbing.com/) | Optimización de imágenes a WebP (solo en desarrollo) |
 | Google Fonts | Inter, Playfair Display, Cormorant Garamond |
 
 ## 📁 Estructura del proyecto
@@ -39,6 +40,8 @@ LANDING MAGGIE NAILS/
 ├── index.html                 # Página principal (única página del sitio)
 ├── package.json               # Dependencias y scripts de build
 ├── tailwind.config.js         # Tema de Tailwind: paleta maggie/gold y tipografías
+├── tools/
+│   └── optimizar-imagenes.mjs # Genera los WebP a partir de los PNG originales
 ├── styles/
 │   ├── tailwind.src.css       # FUENTE de Tailwind (se edita esto)
 │   ├── tailwind.css           # CSS COMPILADO (generado — no editar a mano)
@@ -72,6 +75,7 @@ Instala las dependencias y **compila el CSS automáticamente** (el script `prepa
 | `npm install` | Instala dependencias **y** compila el CSS (vía `prepare`) |
 | `npm run build:css` | Compila `styles/tailwind.src.css` → `styles/tailwind.css` minificado |
 | `npm run dev:css` | Igual, pero en modo *watch*: recompila solo al guardar cambios |
+| `npm run optimizar:imagenes` | Regenera los WebP desde los PNG originales (solo al agregar fotos) |
 
 ### Flujo de trabajo diario
 
@@ -106,6 +110,54 @@ Ahora ese CSS se genera una sola vez en desarrollo y se sirve como archivo está
 `styles/tailwind.css` va **último**, después de `maggienails.css` y de Swiper. El Play CDN
 inyectaba su `<style>` al final del `<head>`, así que las utilidades de Tailwind tenían
 prioridad sobre el CSS propio. Subir ese `<link>` invertiría la cascada y rompería el diseño.
+
+## 🖼️ Cómo se manejan las imágenes
+
+Los PNG originales se conservan en `images/` y `assets/` como **fuente**, pero el sitio
+**no los sirve**: sirve los WebP que genera `npm run optimizar:imagenes`. Al agregar una
+foto nueva hay que correr ese comando y commitear los WebP resultantes.
+
+Los tamaños no son arbitrarios: salen de medir el ancho real de render de cada imagen en
+390 / 768 / 1440 px y multiplicar por 3, para cubrir pantallas con densidad DPR 3.
+
+### La galería y el `srcset`
+
+Cada foto se genera en tres anchos — 400, 800 y 1080 px — y el navegador elige con:
+
+```html
+srcset="images/img1-400.webp 400w, images/img1-800.webp 800w, images/img1.webp 1080w"
+sizes="(min-width: 640px) 360px, 92vw"
+```
+
+Los cortes salen de los anchos medidos: la foto se muestra a ~354 px en móvil (1 slide),
+~338 px en tablet (2 slides) y ~345 px en escritorio (3 slides). Como el ancho es
+prácticamente el mismo en tablet y escritorio, un solo corte en 640 px alcanza. **400w**
+cubre pantallas DPR 1, **800w** las DPR 2 (la mayoría de los celulares) y **1080w** las DPR 3.
+
+> ⚠️ El atributo `src` apunta a propósito a la versión de **1080 px**: `main.js` hace
+> `lightboxImg.src = img.src`, así que el lightbox siempre abre la foto grande aunque la
+> grilla haya cargado la de 400 px. Si se cambia el `src` a una variante chica, el lightbox
+> se ve borroso.
+
+### Los logos y la relación de aspecto
+
+`logo-header.webp` mide 652×130 y `logo-maggie.webp` 750×842. **No son números redondos a
+propósito.** Los dos logos se dimensionan con un solo lado fijo (`h-9 w-auto`, `w-44`) y el
+navegador calcula el otro a partir de la relación de aspecto del archivo. Si el redimensionado
+la redondea, el elemento cambia de tamaño y corre el layout de toda la página. 750×842 conserva
+1875:2105 exacto (= 375:421); 652×130 aproxima 2287:456 con un error de 0.0012 px, por debajo
+del cuanto de layout de Chrome (1/64 px).
+
+### El fondo del hero
+
+Antes se traía por hotlink desde `images.unsplash.com`. Ahora está self-hosteado en
+`assets/hero.webp` (1920 px) con una variante liviana `assets/hero-movil.webp` (1000 px), y
+se sirve desde `.hero-bg` en `maggienails.css` con una media query. El original descargado
+queda en `assets/hero-origen.jpg` como fuente para volver a generarlos.
+
+Como es el elemento **LCP** y los fondos de CSS se descubren tarde (recién después de bajar y
+parsear el CSS), el `<head>` lleva dos `<link rel="preload">` con `media` para adelantar la
+descarga de la variante que corresponda.
 
 ## 🌐 Despliegue
 

@@ -1,0 +1,13 @@
+# Configuración de deploy de Netlify.
+#
+# Al vivir en el repo, la configuración viaja con el proyecto: no depende de lo
+# que esté cargado a mano en el panel de Netlify.
+
+[build]
+  # El sitio es estático y se publica desde la raíz del repo.
+  publish = "."
+
+  # Sin build. styles/tailwind.css se compila en desarrollo y se versiona, así
+  # que Netlify no necesita construir nada: publica los archivos tal cual.
+  # Esto también evita que un fallo de npm pueda tumbar un deploy de producción.
+  command = ""

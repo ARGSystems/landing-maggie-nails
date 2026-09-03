@@ -4,7 +4,7 @@ Landing page oficial de **Maggie Nails**, nail studio en Salta, Argentina. Sitio
 
 **Desarrollado por [ARG Systems](https://github.com/Moksys1)**
 
-🔗 Demo en vivo: _(agregar acá la URL de Vercel una vez desplegado)_
+🔗 Demo en vivo: _(agregar acá la URL de Netlify)_
 
 ---
 
@@ -109,10 +109,17 @@ prioridad sobre el CSS propio. Subir ese `<link>` invertiría la cascada y rompe
 
 ## 🌐 Despliegue
 
-El sitio se despliega en **Vercel** conectado directo a este repositorio de GitHub: cada push a
-`main` genera un deploy automático. Framework Preset: **Other**, sin Build Command.
+El sitio se despliega en **Netlify** conectado directo a este repositorio de GitHub: cada push
+a `main` genera un deploy automático.
 
-**El CSS compilado (`styles/tailwind.css`) se versiona en el repo a propósito.** Vercel no
+Configuración en Netlify:
+
+| Campo | Valor |
+|---|---|
+| Build command | *(vacío)* |
+| Publish directory | `.` (la raíz del repo) |
+
+**El CSS compilado (`styles/tailwind.css`) se versiona en el repo a propósito.** Netlify no
 necesita correr ningún build: publica los archivos tal cual. Las razones:
 
 - **El deploy no puede fallar por el build.** Sin `npm install` en el servidor, una caída de
@@ -120,15 +127,20 @@ necesita correr ningún build: publica los archivos tal cual. Las razones:
 - **Deploys instantáneos**, sin los ~30 s de instalar dependencias en cada push.
 - **El repo funciona sin Node.** Al ser una pieza de portfolio, alguien puede clonarlo y abrir
   `index.html` directamente y verlo bien, sin instalar nada.
-- **Portabilidad**: anda igual en GitHub Pages, Netlify o cualquier hosting estático.
+- **Portabilidad**: anda igual en GitHub Pages, Vercel, Cloudflare Pages o cualquier hosting estático.
 
 El costo de esta decisión es que un archivo generado vive en git y puede quedar
 desincronizado si se edita el HTML sin recompilar. Por eso los scripts `build:css` y
 `dev:css`, y la advertencia de la sección anterior.
 
-> Nota: los scripts se llaman `build:css` y `dev:css`, no `build`. Es a propósito: si
-> existiera un script llamado `build`, Vercel lo detectaría y trataría de construir el sitio
-> en el deploy, buscando un directorio de salida que este proyecto no tiene.
+> Nota: los scripts se llaman `build:css` y `dev:css`, no `build`. Es a propósito: evita
+> que la plataforma de hosting detecte un build step y trate de construir el sitio en el
+> deploy, buscando un directorio de salida que este proyecto no tiene. Netlify solo corre un
+> build si se lo configurás explícitamente, pero el nombre lo deja a prueba de sorpresas
+> (y de una eventual migración a otra plataforma).
+
+> Si más adelante hace falta configurar headers, redirects o caché, en Netlify eso va en un
+> archivo `netlify.toml` en la raíz del repo.
 
 ## 🎨 Personalización
 

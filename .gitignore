@@ -22,8 +22,8 @@ dist/
 .env
 
 # OJO: styles/tailwind.css SI se versiona a proposito (es el CSS compilado que
-# sirve el sitio). Vercel no corre build: publica el repo tal cual. Si alguna vez
+# sirve el sitio). Netlify no corre build: publica el repo tal cual. Si alguna vez
 # se decide construir en el deploy, agregar aca la linea: styles/tailwind.css
 
-# --- Vercel ---
-.vercel
+# --- Netlify ---
+.netlify

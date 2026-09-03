@@ -50,6 +50,7 @@ LANDING MAGGIE NAILS/
 ├── styles/
 │   ├── tailwind.src.css       # FUENTE de Tailwind (se edita esto)
 │   ├── tailwind.css           # CSS COMPILADO (generado — no editar a mano)
+│   ├── fuentes.css            # @font-face de las tipografías (generado)
 │   └── maggienails.css        # Estilos propios: animaciones, lightbox, footer, Swiper
 ├── scripts/
 │   └── main.js                # Todas las interacciones: carrusel, reveal, contadores,
@@ -274,6 +275,88 @@ incoherente. La honestidad se resuelve con el texto, no eliminando la sección.
 
 El aviso lleva `role="status"` y `aria-live="polite"` para que un lector de pantalla lo anuncie
 al aparecer.
+
+## 📊 Resultados medidos
+
+Lighthouse (móvil, CPU x4, 1638 Kbps, RTT 150 ms), comparando el estado inicial contra el actual:
+
+| Categoría | Antes | Después | |
+|---|---|---|---|
+| Performance | 60 | **72** | +12 |
+| Accesibilidad | 89 | 89 | sin cambio |
+| Best Practices | 100 | 100 | ya estaba |
+| SEO | 100 | 100 | ya estaba |
+
+| Métrica | Antes | Después |
+|---|---|---|
+| Largest Contentful Paint | 24,4 s | **4,2 s** |
+| Time to Interactive | 25,0 s | **4,2 s** |
+| Speed Index | 5,2 s | 4,9 s |
+| Total Blocking Time | 220 ms | 200 ms |
+| Cumulative Layout Shift | 0 | 0 |
+| **Peso total transferido** | **5.491 KiB** | **642 KiB** |
+
+> Lighthouse simula una red lenta y un procesador 4x más lento. Sobre red real el LCP medido
+> fue de ~810 ms. Son metodologías distintas: sirven para comparar antes/después, no como
+> tiempo absoluto.
+
+**SEO y Best Practices ya daban 100 antes.** Vale aclararlo: la categoría SEO de Lighthouse solo
+revisa lo básico (título, meta description, links rastreables) y **no audita Open Graph ni
+Twitter Card**. Que diera 100 no significaba que el link se viera bien al compartirlo — de hecho
+no se veía. Un score perfecto no equivale a estar completo.
+
+## ✅ Cómo se verificó cada cambio
+
+Ninguna fase se dio por buena sin comprobarlo. El método:
+
+1. Se sirve la versión anterior y la nueva **en paralelo**, en dos puertos.
+2. Se capturan ambas a página completa en 390 / 768 / 1440 px, congelando animaciones,
+   scroll suave y el autoplay del carrusel para que las capturas sean deterministas
+   (verificado: dos corridas de la misma versión dan PNG byte a byte idénticos).
+3. Se comparan **píxel a píxel** y se compara el DOM completo: posición, tamaño y tipografía
+   de cada elemento que ocupa espacio.
+4. Se hace `grep` de los enlaces de WhatsApp e Instagram en el diff para confirmar que no
+   cambió ninguno.
+
+Salvo la conversión de imágenes —que por definición altera píxeles al recomprimir— todas las
+fases cerraron con **0 píxeles de diferencia**.
+
+## ⚠️ Pendientes conocidos
+
+Cosas detectadas y **no** corregidas, porque implican decisiones de diseño o de contenido:
+
+### Accesibilidad (Lighthouse 89)
+
+1. **El botón "subir" no tiene nombre accesible.** Es un `<button>` con solo un ícono SVG
+   adentro: un lector de pantalla lo anuncia como "botón" a secas. Se arregla con un
+   `aria-label`. Es el único de los tres que se arregla sin tocar el diseño.
+2. **Contraste insuficiente en el botón "Ver Servicios".** Blanco sobre `maggie-500`
+   (`#b57edc`) da 3:1 y la norma WCAG AA pide 4,5:1. Arreglarlo implica oscurecer ese color
+   de marca o el texto: **es un cambio visual**.
+3. **Salto en la jerarquía de encabezados.** El footer usa `<h4>` después de un `<h2>`,
+   salteando `<h3>`. Cambiar el nivel afecta los estilos asociados.
+
+### Nav apretado entre 768px y ~825px
+
+En ese rango el logo y el link "Inicio" quedan **pegados sin separación**, y "¿Por qué
+elegirnos?" se parte en dos líneas. Desde 830px en adelante está bien.
+
+**Es preexistente**, no lo introdujo ninguna de estas fases: se verificó midiendo el nav en el
+commit inicial y da exactamente lo mismo (hueco de 0px, mismo link partido). Se arregla subiendo
+el breakpoint del menú de escritorio de `md:` a `lg:`, o achicando el espaciado en ese rango
+— las dos cosas cambian cómo se ve.
+
+### Otros
+
+- **`fonts/` pesa 1,2 MB en 26 archivos y el navegador solo descarga 7** (289 KB). Los otros
+  son pesos que el diseño no usa hoy. Se pueden podar, con el riesgo de que si mañana se usa
+  uno el navegador falsifique la variante y se vea peor.
+- **`marca/` se publica igual.** `robots.txt` pide no rastrearla, pero eso es un pedido a los
+  buscadores, no un bloqueo: sigue accesible por URL. Se bloquea con una regla en `netlify.toml`.
+- **La `<meta name="description">` dice "nail studio en Salta, Argentina"** y ese texto ahora
+  también viaja en el preview de WhatsApp. Si el estudio no está operando, conviene revisarla.
+- **Las URLs absolutas están escritas a mano.** Si el sitio pasa a un dominio propio hay que
+  actualizar `canonical`, `og:url`, `og:image`, `twitter:image`, `robots.txt` y `sitemap.xml`.
 
 ## 🌐 Despliegue
 

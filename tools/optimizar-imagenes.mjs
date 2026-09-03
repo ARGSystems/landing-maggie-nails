@@ -64,3 +64,51 @@ console.log(`${fs_.padEnd(31)} ->  ${fo.padEnd(28)} ${(kb(fs_)+' KB').padStart(8
 
 console.log('-'.repeat(96));
 console.log(`TOTAL (sin contar variantes srcset duplicadas): ${antes.toFixed(0)} KB -> ${despues.toFixed(0)} KB`);
+
+// ---------------------------------------------------------------------------
+// Imagen de preview para redes (Open Graph / Twitter) e iconos de la marca.
+// La foto es propia del estudio, no de banco de imagenes.
+// ---------------------------------------------------------------------------
+const W = 1200, H = 630, FOTO = 760, PANEL = W - FOTO;
+
+// Panel de marca a la izquierda. El degradado llega a #1a0b2e justo en la union
+// con la foto (37% de 1200 = 444px) para que no se note la costura.
+const fondo = Buffer.from(`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#3a1259"/>
+    <stop offset="37%" stop-color="#1a0b2e"/>
+    <stop offset="100%" stop-color="#1a0b2e"/>
+  </linearGradient></defs><rect width="${W}" height="${H}" fill="url(#b)"/></svg>`);
+
+// Mismo velo que el hero del sitio: oscuro donde apoya el logo, se abre a la derecha.
+const fundido = Buffer.from(`<svg width="${FOTO}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%"   stop-color="#1a0b2e" stop-opacity="1"/>
+    <stop offset="32%"  stop-color="#1a0b2e" stop-opacity="0.45"/>
+    <stop offset="70%"  stop-color="#1a0b2e" stop-opacity="0.12"/>
+    <stop offset="100%" stop-color="#1a0b2e" stop-opacity="0.05"/>
+  </linearGradient></defs><rect width="${FOTO}" height="${H}" fill="url(#g)"/></svg>`);
+
+const foto = await sharp('images/img1.png').resize(FOTO, H, { fit: 'cover', position: 'centre' })
+  .composite([{ input: fundido, top: 0, left: 0 }]).toBuffer();
+const logoOg = await sharp('marca/Recurso 1 logo2.png').resize({ height: 330 }).toBuffer();
+const anchoLogo = (await sharp(logoOg).metadata()).width;
+
+await sharp(fondo).composite([
+  { input: foto,    top: 0, left: PANEL },
+  { input: logoOg,  top: Math.round((H - 330) / 2), left: Math.round((PANEL - anchoLogo) / 2) },
+]).jpeg({ quality: 88, mozjpeg: true }).toFile('assets/og.jpg');
+console.log(`${'(compuesta)'.padEnd(31)} ->  ${'assets/og.jpg'.padEnd(28)} ${''.padStart(8)} ${(kb('assets/og.jpg')+' KB').padStart(9)}`);
+
+// apple-touch-icon: iOS no respeta transparencia, asi que va sobre fondo solido.
+// El recuadro redondeado lo aplica el sistema.
+await sharp({ create: { width: 180, height: 180, channels: 3, background: '#4b1c71' } })
+  .composite([{ input: await sharp('marca/favicon1.png').resize({ width: 140 }).toBuffer(),
+                gravity: 'centre' }])
+  .png({ compressionLevel: 9 }).toFile('assets/apple-touch-icon.png');
+console.log(`${'marca/favicon1.png'.padEnd(31)} ->  ${'assets/apple-touch-icon.png'.padEnd(28)} ${''.padStart(8)} ${(kb('assets/apple-touch-icon.png')+' KB').padStart(9)}`);
+
+// 32x32 para que la pestaña se vea nitida (el navegador reduciendo desde 192 la ensucia).
+await sharp('marca/favicon1.png').resize({ width: 32 }).png({ compressionLevel: 9 })
+  .toFile('assets/favicon-32.png');
+console.log(`${'marca/favicon1.png'.padEnd(31)} ->  ${'assets/favicon-32.png'.padEnd(28)} ${''.padStart(8)} ${(kb('assets/favicon-32.png')+' KB').padStart(9)}`);

@@ -1,0 +1,10 @@
+# Maggie Nails — https://maggienails.netlify.app/
+
+User-agent: *
+Allow: /
+
+# marca/ guarda los archivos originales de diseño (variantes de logo, patrones,
+# iteraciones descartadas). No son parte del sitio y no aportan nada en buscadores.
+Disallow: /marca/
+
+Sitemap: https://maggienails.netlify.app/sitemap.xml

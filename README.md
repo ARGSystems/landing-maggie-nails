@@ -4,7 +4,7 @@ Landing page oficial de **Maggie Nails**, nail studio en Salta, Argentina. Sitio
 
 **Desarrollado por [ARG Systems](https://github.com/Moksys1)**
 
-🔗 Demo en vivo: _(agregar acá la URL de Netlify)_
+🔗 Demo en vivo: **https://maggienails.netlify.app**
 
 ---
 
@@ -38,6 +38,8 @@ Sitio estático servido tal cual, con un único paso de build local para compila
 ```
 LANDING MAGGIE NAILS/
 ├── index.html                 # Página principal (única página del sitio)
+├── robots.txt                 # Reglas de rastreo + ubicación del sitemap
+├── sitemap.xml                # Una sola URL: el sitio es de una página
 ├── package.json               # Dependencias y scripts de build
 ├── tailwind.config.js         # Tema de Tailwind: paleta maggie/gold y tipografías
 ├── tools/
@@ -163,6 +165,40 @@ queda en `assets/hero-origen.jpg` como fuente para volver a generarlos.
 Como es el elemento **LCP** y los fondos de CSS se descubren tarde (recién después de bajar y
 parsear el CSS), el `<head>` lleva dos `<link rel="preload">` con `media` para adelantar la
 descarga de la variante que corresponda.
+
+## 🔎 SEO técnico y compartido en redes
+
+### Preview al compartir el link
+
+`assets/og.jpg` (1200x630) se genera con `npm run optimizar:imagenes` a partir de
+`images/img1.png` y el logotipo: **es una foto propia del estudio, no de banco de imágenes.**
+Pesa 59 KB, bien por debajo del límite que maneja WhatsApp para mostrar preview grande.
+
+Las URLs de `og:image`, `og:url` y `canonical` son **absolutas a propósito**: los scrapers de
+WhatsApp, Facebook y LinkedIn no resuelven rutas relativas, y con una ruta relativa el preview
+sale sin imagen.
+
+> ⚠️ Están escritas a mano apuntando a `https://maggienails.netlify.app/`. **Si el sitio pasa
+> a un dominio propio hay que actualizarlas** en `index.html` (canonical, `og:url`, `og:image`,
+> `twitter:image`), en `robots.txt` y en `sitemap.xml`. Al ser un sitio estático sin
+> plantillas, no hay forma de derivarlas automáticamente.
+
+### Por qué no hay JSON-LD ni analytics
+
+Se dejaron afuera **a propósito**. El schema `LocalBusiness`/`NailSalon` declara dirección,
+horarios y teléfono de un local físico: publicar datos de un negocio que no está operando sería
+información falsa para Google. Tampoco hay Analytics ni píxeles de tracking, así que el sitio no
+necesita banner de cookies.
+
+### El sitemap
+
+Una sola `<url>`. Las secciones (`#servicios`, `#galeria`, `#faq`...) son anclas dentro del
+mismo documento, no URLs independientes: listarlas sería declarar contenido duplicado.
+
+### robots.txt
+
+Permite todo salvo `/marca/`, que son los archivos originales de diseño. No aportan nada en
+buscadores y no tiene sentido gastar presupuesto de rastreo en ellos.
 
 ## 🌐 Despliegue
 

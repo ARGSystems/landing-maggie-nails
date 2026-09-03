@@ -551,6 +551,13 @@
                         </svg>
                     </button>
                 </form>
+
+                <p id="avisoNewsletter" role="status" aria-live="polite"
+                   class="hidden w-full max-w-xs text-sm text-maggie-300 leading-relaxed">
+                    Gracias por el interés. El newsletter todavía no está activo, así que
+                    <span class="text-white font-medium">no guardamos tu correo</span>.
+                    Por ahora las novedades salen por Instagram.
+                </p>
             </div>
         </div>
 
@@ -571,17 +578,12 @@
         </svg>
     </button>
 
-    <!-- Interacciones de UI: boton "subir" y menu movil.
-         Estaban inline; se movieron a un archivo para que la CSP pueda ser
-         script-src 'self' sin depender de hashes. -->
-    <script src="scripts/ui.js"></script>
-
     <!-- Swiper.js (carrusel de la galería) -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
             integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Script de interacciones visuales (revelado al scroll, contadores, carrusel, lightbox) -->
+    <!-- Todas las interacciones: carrusel, revelado, contadores, lightbox, menú móvil y botón subir -->
     <script src="scripts/main.js"></script>
 </body>
 </html>

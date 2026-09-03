@@ -52,7 +52,8 @@ LANDING MAGGIE NAILS/
 │   ├── tailwind.css           # CSS COMPILADO (generado — no editar a mano)
 │   └── maggienails.css        # Estilos propios: animaciones, lightbox, footer, Swiper
 ├── scripts/
-│   └── main.js                # Interacciones: reveal, contadores, carrusel, lightbox
+│   └── main.js                # Todas las interacciones: carrusel, reveal, contadores,
+│                              # lightbox, menú móvil, botón subir y newsletter
 ├── assets/                    # SOLO lo que el sitio sirve (8 archivos WebP/PNG)
 ├── marca/                     # Archivos originales de diseño (ver marca/README.md)
 ├── images/                    # Fotos de la galería: PNG originales + WebP generados
@@ -224,9 +225,9 @@ Se configuran en `netlify.toml`. En criollo, qué previene cada uno:
 
 No usa `'unsafe-inline'` ni en scripts ni en estilos. Para lograrlo hubo que sacar del HTML:
 
-- los dos `<script>` inline → `scripts/ui.js`
-- `onclick="window.scrollTo(0,0)"` del botón subir → `addEventListener` en `ui.js`
-- `onsubmit="event.preventDefault();"` del newsletter → `addEventListener` en `ui.js`
+- los dos `<script>` inline → `scripts/main.js`
+- `onclick="window.scrollTo(0,0)"` del botón subir → `addEventListener` en `main.js`
+- `onsubmit="event.preventDefault();"` del newsletter → `addEventListener` en `main.js`
 - el único `style="opacity:.08"` → la clase `opacity-[0.08]`
 
 > Se descartó la alternativa de permitir esos scripts con hashes (`'sha256-...'`). Un hash se
@@ -255,6 +256,24 @@ pintar texto. Ahora viven en `fonts/` y la CSP puede decir `font-src 'self'`.
 
 Se descargan solo los subsets `latin` y `latin-ext`: los acentos y signos del castellano entran
 todos en `latin`. Verificado que el render es **idéntico píxel a píxel** al de Google Fonts.
+
+## 📬 El formulario de newsletter
+
+El footer tiene un formulario de suscripción que **no manda el correo a ningún lado**: no hay
+servicio de mailing detrás ni se guarda nada.
+
+Antes se tragaba el envío en silencio (`onsubmit="event.preventDefault();"`), lo que es peor que
+no tenerlo: el usuario escribe su correo, toca el botón, no pasa nada visible y queda creyendo que
+se suscribió. Ahora, al enviarlo, el formulario se reemplaza por un aviso que dice explícitamente
+que **no se guardó el correo**.
+
+Se evaluó directamente sacar el formulario. Se decidió mantenerlo con feedback honesto porque
+quitarlo obligaba a rediseñar la grilla de 12 columnas del footer, y porque los botones de
+"Reservar" hacen la misma promesa implícita y se mantienen: sacar solo el newsletter habría sido
+incoherente. La honestidad se resuelve con el texto, no eliminando la sección.
+
+El aviso lleva `role="status"` y `aria-live="polite"` para que un lector de pantalla lo anuncie
+al aparecer.
 
 ## 🌐 Despliegue
 

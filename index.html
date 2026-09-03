@@ -11,40 +11,17 @@
     <!-- Conexión al CSS externo -->
     <link rel="stylesheet" href="styles/maggienails.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        maggie: {
-                            900: '#4b1c71',
-                            700: '#7f4ca5',
-                            500: '#b57edc',
-                            300: '#dbb6ee',
-                            100: '#faf5ff',
-                        },
-                        gold: {
-                            900: '#6b4e24',
-                            700: '#a67c3d',
-                            500: '#c9a15a',
-                            300: '#e8d5a8',
-                            100: '#fbf4e7',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                        accent: ['Cormorant Garamond', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 
     <!-- Swiper.js (carrusel de la galería) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Tailwind compilado con la CLI (reemplaza al Play CDN).
+         Va ULTIMO a proposito: el Play CDN inyectaba su <style> al final del <head>,
+         asi que sus utilidades pisaban a maggienails.css y a Swiper. Mover este
+         <link> hacia arriba invertiria esa prioridad y romperia el diseno.
+         Se regenera con: npm run build  (fuente: styles/tailwind.src.css) -->
+    <link rel="stylesheet" href="styles/tailwind.css">
 </head>
 <body class="bg-maggie-100 text-gray-800 font-sans antialiased">
 

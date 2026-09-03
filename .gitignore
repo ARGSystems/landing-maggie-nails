@@ -15,8 +15,15 @@ ehthumbs.db
 *.swp
 *.swo
 
-# --- Node / futuras herramientas de build (por si se agregan más adelante) ---
+# --- Node / build de Tailwind ---
 node_modules/
 npm-debug.log*
 dist/
 .env
+
+# OJO: styles/tailwind.css SI se versiona a proposito (es el CSS compilado que
+# sirve el sitio). Vercel no corre build: publica el repo tal cual. Si alguna vez
+# se decide construir en el deploy, agregar aca la linea: styles/tailwind.css
+
+# --- Vercel ---
+.vercel

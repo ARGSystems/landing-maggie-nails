@@ -1,0 +1,10 @@
+/* Archivo FUENTE de Tailwind. No se edita el resultado (styles/tailwind.css): se regenera.
+   base       -> Preflight, el reset de estilos del navegador
+   components -> capa para clases de componentes
+   utilities  -> las clases utilitarias (bg-maggie-900, md:text-4xl, etc.)
+
+   Los estilos propios del sitio (animaciones, lightbox, footer, overrides de Swiper)
+   siguen viviendo en styles/maggienails.css, sin tocar. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

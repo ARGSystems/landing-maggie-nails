@@ -1,0 +1,20 @@
+{
+  "name": "landing-maggie-nails",
+  "version": "1.0.0",
+  "description": "Landing page de Maggie Nails - nail studio en Salta, Argentina.",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build:css": "tailwindcss -i ./styles/tailwind.src.css -o ./styles/tailwind.css --minify",
+    "dev:css": "tailwindcss -i ./styles/tailwind.src.css -o ./styles/tailwind.css --watch",
+    "prepare": "npm run build:css"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.19"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

@@ -1,0 +1,22 @@
+# --- Herramientas de desarrollo locales ---
+# Carpeta generada por Graphify (indexación/mapa de conocimiento local).
+# No forma parte del sitio y no debe subirse al repo.
+graphify-out/
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Node / futuras herramientas de build (por si se agregan más adelante) ---
+node_modules/
+npm-debug.log*
+dist/
+.env

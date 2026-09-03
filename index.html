@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maggie Nails | Uñas que te acompañan</title>
+    <meta name="description" content="Maggie Nails: nail studio en Salta, Argentina. Semipermanente, Kapping, Soft Gel y Poly Gel con diseños exclusivos y máxima durabilidad.">
+    <!-- Agregalo dentro de tu <head> -->
+    <link rel="icon" type="image/png" href="assets/favicon1.png" />
+
+    <!-- Conexión al CSS externo -->
+    <link rel="stylesheet" href="styles/maggienails.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        maggie: {
+                            900: '#4b1c71',
+                            700: '#7f4ca5',
+                            500: '#b57edc',
+                            300: '#dbb6ee',
+                            100: '#faf5ff',
+                        },
+                        gold: {
+                            900: '#6b4e24',
+                            700: '#a67c3d',
+                            500: '#c9a15a',
+                            300: '#e8d5a8',
+                            100: '#fbf4e7',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        accent: ['Cormorant Garamond', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+    <!-- Swiper.js (carrusel de la galería) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+<body class="bg-maggie-100 text-gray-800 font-sans antialiased">
+
+    <!-- Menú de Navegación Sticky -->
+    <nav class="bg-maggie-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 md:px-8 py-3 md:py-4 flex justify-between items-center">
+
+            <!-- Logo y Texto -->
+            <a href="#inicio" class="flex items-center gap-3 transition-transform hover:scale-105">
+                <img src="assets/logo header2.png" alt="Icono Maggie Nails" class="h-7 md:h-9 w-auto drop-shadow-md">
+            </a>
+
+            <!-- Botón de Menú Hamburguesa (Solo visible en celulares, touch target amplio) -->
+            <button id="btnMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuMovil" class="md:hidden -mr-2 p-3 text-white hover:text-maggie-300 active:bg-white/10 rounded-lg transition-colors focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <!-- Enlaces Ancla (Escritorio - Ocultos en celular) -->
+            <div class="hidden md:flex items-center space-x-5 lg:space-x-7 text-sm lg:text-base font-medium">
+                <a href="#inicio" class="nav-link hover:text-maggie-300 transition-colors">Inicio</a>
+                <a href="#sobre-nosotros" class="nav-link hover:text-maggie-300 transition-colors">Nosotras</a>
+                <a href="#beneficios" class="nav-link hover:text-maggie-300 transition-colors">¿Por qué elegirnos?</a>
+                <a href="#servicios" class="nav-link hover:text-maggie-300 transition-colors">Servicios</a>
+                <a href="#galeria" class="nav-link hover:text-maggie-300 transition-colors">Trabajos</a>
+                <a href="#testimonios" class="nav-link hover:text-maggie-300 transition-colors">Reseñas</a>
+                <a href="#faq" class="nav-link hover:text-maggie-300 transition-colors">FAQ</a>
+            </div>
+        </div>
+
+        <!-- Menú Desplegable (Móvil) - Colapsado por defecto, se anima con la clase .menu-open -->
+        <div id="menuMovil" class="menu-movil md:hidden bg-maggie-900 border-t border-maggie-700 shadow-lg absolute w-full left-0">
+            <div class="flex flex-col px-4 py-2 font-medium">
+                <a href="#inicio" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">Inicio</a>
+                <a href="#sobre-nosotros" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">Nosotras</a>
+                <a href="#beneficios" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">¿Por qué elegirnos?</a>
+                <a href="#servicios" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">Servicios</a>
+                <a href="#galeria" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">Trabajos</a>
+                <a href="#testimonios" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">Reseñas</a>
+                <a href="#faq" class="menu-item text-white hover:text-maggie-300 hover:bg-white/5 active:bg-white/10 rounded-lg px-4 py-3.5 text-base transition-colors">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header id="inicio" class="scroll-mt-24 relative overflow-hidden text-white bg-maggie-900 bg-cover bg-center" style="background-image: linear-gradient(rgba(26,11,46,0.25), rgba(26,11,46,0.25)), url('https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&amp;w=2000&amp;auto=format&amp;fit=crop');">
+        <!-- Overlay: oscuro y sólido en móvil, degradado de izquierda a derecha en escritorio -->
+        <div class="absolute inset-0 bg-[#1a0b2e]/70 md:hidden"></div>
+        <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-[#1a0b2e] via-[#1a0b2e]/80 to-transparent"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 pt-16 pb-12 md:py-32 lg:py-40 flex flex-col items-center text-center md:items-start md:text-left">
+            <div class="w-full md:max-w-lg">
+
+                <img src="assets/Recurso 1 logo2.png" alt="Logo Maggie Nails" class="animate-fade-up w-28 sm:w-32 md:w-44 mb-5 md:mb-8 drop-shadow-lg">
+
+                <h1 class="animate-fade-up delay-1 font-accent italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] leading-tight text-maggie-300 mb-3 md:mb-4">
+                    Trabajo real, resultados reales.
+                </h1>
+                <p class="animate-fade-up delay-2 text-base md:text-lg text-gray-200 leading-relaxed mb-6 md:mb-10 max-w-md mx-auto md:mx-0">
+                    Olvidate del esmalte saltado a los dos días. Diseños exclusivos y un servicio enfocado en la durabilidad para que tus manos luzcan impecables por semanas.
+                </p>
+
+                <div class="animate-fade-up delay-3 flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3 md:gap-4">
+                    <a href="#servicios" class="btn-hover w-full sm:w-auto text-center inline-block bg-maggie-500 text-white font-bold py-3.5 sm:py-3 px-8 rounded-full text-base md:text-lg shadow-lg">
+                        Ver Servicios
+                    </a>
+                    <a href="#galeria" class="btn-hover-ghost w-full sm:w-auto text-center inline-block border border-white/40 text-white font-semibold py-3.5 sm:py-3 px-8 rounded-full text-base md:text-lg">
+                        Ver Trabajos
+                    </a>
+                </div>
+
+                <!-- Franja de confianza -->
+                <div class="animate-fade-up delay-4 mt-8 md:mt-14 flex justify-center md:justify-start gap-6 sm:gap-10 border-t border-white/15 pt-6 md:pt-8 w-full">
+                    <div class="text-center md:text-left">
+                        <p class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gold-300"><span data-counter="500">0</span>+</p>
+                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">Clientas felices</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <p class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gold-300"><span data-counter="3">0</span>+</p>
+                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">Años de trayectoria</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <p class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gold-300">5.0 ★</p>
+                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">En Instagram</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Promesa de Valor / Diferencial -->
+    <section id="beneficios" class="scroll-mt-24 bg-pattern py-12 md:py-24 relative">
+        <div class="max-w-6xl mx-auto px-4 md:px-8 text-center">
+            <p class="reveal text-gold-700 text-sm font-semibold mb-3">Nuestro sello</p>
+            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">¿Por qué elegirnos?</h2>
+            <div class="reveal divider-gold mb-4"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8 md:mt-10 max-w-4xl mx-auto">
+                <div class="reveal card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                    <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">✨</div>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Durabilidad Extrema</h3>
+                    <p class="text-gray-600">Trabajamos con técnicas y productos de primera línea para que tus uñas resistan tu ritmo de vida sin despegarse.</p>
+                </div>
+                <div class="reveal reveal-delay-1 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                    <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">🎨</div>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Diseños Únicos</h3>
+                    <p class="text-gray-600">Vos traés la idea, nosotras la hacemos realidad. Personalización total en cada set.</p>
+                </div>
+                <div class="reveal reveal-delay-2 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                    <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">💖</div>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Atención Cercana</h3>
+                    <p class="text-gray-600">Un espacio pensado para que te relajes y disfrutes de tu momento de cuidado personal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Nosotros -->
+    <section id="sobre-nosotros" class="scroll-mt-24 py-12 md:py-24 bg-maggie-100 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
+            <div class="reveal relative">
+                <div class="absolute -inset-4 bg-gradient-to-br from-maggie-300/40 to-gold-300/40 rounded-[2rem] blur-2xl"></div>
+                <img src="images/img2.png" alt="Trabajo de uñas realizado en Maggie Nails" class="relative rounded-[2rem] shadow-2xl w-full h-[260px] sm:h-[320px] md:h-[420px] object-cover border-4 border-white">
+                <div class="hidden md:flex absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl px-6 py-4 items-center gap-3 border border-maggie-200">
+                    <span class="text-3xl font-serif font-bold text-maggie-900"><span data-counter="1200">0</span>+</span>
+                    <span class="text-xs text-gray-500 leading-tight max-w-[90px]">diseños realizados con amor</span>
+                </div>
+            </div>
+
+            <div class="reveal reveal-delay-1 text-center md:text-left">
+                <p class="text-gold-700 text-sm font-semibold mb-3">Sobre nosotros</p>
+                <h2 class="text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4 md:mb-6">La pasión detrás de cada diseño</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Maggie Nails nació de las ganas de convertir el cuidado de tus uñas en una experiencia de verdad especial. Cada set se piensa a medida, cuidando cada detalle desde la preparación de la uña hasta el último toque de brillo.
+                </p>
+                <p class="text-gray-600 mb-6 md:mb-8 leading-relaxed">
+                    Nos formamos constantemente en las técnicas más nuevas del mercado para ofrecerte resultados que no solo se ven increíbles, sino que además duran. Porque sabemos que tus manos hablan de vos todos los días.
+                </p>
+                <div class="grid grid-cols-3 gap-4 mb-6 md:mb-8">
+                    <div class="text-center">
+                        <p class="text-2xl font-serif font-bold text-maggie-900"><span data-counter="3">0</span>+</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Años</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-serif font-bold text-maggie-900"><span data-counter="500">0</span>+</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Clientas</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-serif font-bold text-maggie-900">100%</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Dedicación</p>
+                    </div>
+                </div>
+                <a href="#servicios" class="btn-hover inline-block w-full sm:w-auto text-center bg-maggie-900 text-white font-semibold py-3.5 sm:py-3 px-8 rounded-full">Conocé nuestros servicios</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nuestros Servicios con fondo de Pattern -->
+    <section id="servicios" class="scroll-mt-24 bg-pattern py-12 md:py-24">
+        <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-10 md:mb-14">
+                <p class="reveal text-gold-700 text-sm font-semibold mb-3">Menú de servicios</p>
+                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Nuestros Servicios</h2>
+                <div class="reveal divider-gold mb-4"></div>
+                <p class="reveal text-gray-600 text-base md:text-lg font-medium">Consultá por promos, descuentos y extras por mensaje privado.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+                <!-- Card Semipermanente -->
+                <div class="reveal relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">💅</div>
+                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Semipermanente</h3>
+                    <p class="text-gray-500 mb-6 text-sm">Color duradero y brillo impecable para tus uñas naturales.</p>
+                    <div class="text-3xl font-black text-maggie-900 mb-6">$14.000</div>
+                    <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Semipermanente" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
+                </div>
+
+                <!-- Card Kapping -->
+                <div class="reveal reveal-delay-1 relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Kapping</h3>
+                    <p class="text-gray-500 mb-6 text-sm">Refuerzo ideal para uñas débiles o quebradizas. Crecen sanas.</p>
+                    <div class="text-3xl font-black text-maggie-900 mb-6">$16.000</div>
+                    <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Kapping" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
+                </div>
+
+                <!-- Card Soft Gel -->
+                <div class="reveal reveal-delay-2 relative bg-white rounded-3xl p-6 shadow-lg border-2 border-gold-500 card-hover text-center">
+                    <span class="badge-popular">Más elegido</span>
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">🌸</div>
+                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Soft Gel</h3>
+                    <p class="text-gray-500 mb-6 text-sm">Extensiones ligeras, flexibles y de aspecto súper natural.</p>
+                    <div class="text-3xl font-black text-maggie-900 mb-6">$24.000</div>
+                    <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Soft%20Gel" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
+                </div>
+
+                <!-- Card Poly Gel -->
+                <div class="reveal reveal-delay-3 relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">💎</div>
+                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Poly Gel</h3>
+                    <p class="text-gray-500 mb-6 text-sm">Máxima resistencia y estructura perfecta para extensiones largas.</p>
+                    <div class="text-3xl font-black text-maggie-900 mb-6">$26.000</div>
+                    <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Poly%20Gel" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Galería / Nuestros Trabajos -->
+    <section id="galeria" class="scroll-mt-24 bg-pattern py-12 md:py-24 text-center relative">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+            <p class="reveal text-gold-700 text-sm font-semibold mb-3">Portfolio</p>
+            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Nuestros Trabajos</h2>
+            <div class="reveal divider-gold mb-6"></div>
+            <p class="reveal text-gray-600 mb-8 md:mb-12 max-w-xl mx-auto">Trabajo real, resultados reales. Cientos de manos felices confían en la durabilidad de Maggie Nails.</p>
+
+            <div class="reveal swiper gallery-swiper pb-12">
+                <div class="swiper-wrapper">
+
+                    <!-- Foto 1 -->
+                    <div class="swiper-slide">
+                        <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
+                            <img src="images/img1.png" alt="Diseño de uñas 1" data-lightbox class="w-full aspect-square object-cover">
+                            <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Foto 2 -->
+                    <div class="swiper-slide">
+                        <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
+                            <img src="images/img2.png" alt="Diseño de uñas 2" data-lightbox class="w-full aspect-square object-cover">
+                            <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Foto 3 -->
+                    <div class="swiper-slide">
+                        <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
+                            <img src="images/img3.png" alt="Diseño de uñas 3" data-lightbox class="w-full aspect-square object-cover">
+                            <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Foto 4 -->
+                    <div class="swiper-slide">
+                        <div class="gallery-item overflow-hidden rounded-2xl border-2 border-maggie-300 shadow-md">
+                            <img src="images/img4.png" alt="Diseño de uñas 4" data-lightbox class="w-full aspect-square object-cover">
+                            <div class="gallery-overlay"><span class="text-white text-sm font-semibold tracking-wide">Ver diseño</span></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev hidden md:flex"></div>
+                <div class="swiper-button-next hidden md:flex"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox de la galería -->
+    <div id="lightbox" class="hidden">
+        <button id="lightboxClose" aria-label="Cerrar" class="absolute top-6 right-6 text-white/80 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <img id="lightboxImg" src="" alt="">
+    </div>
+
+        <!-- Sección de Testimonios / Comentarios -->
+    <section id="testimonios" class="scroll-mt-24 py-12 md:py-24 px-4 md:px-8 max-w-6xl mx-auto">
+        <div class="text-center mb-10 md:mb-14">
+            <p class="reveal text-gold-700 text-sm font-semibold mb-3">Testimonios</p>
+            <h2 class="reveal text-2xl md:text-4xl font-bold text-maggie-900 font-serif mb-4">Qué dicen nuestras clientas</h2>
+            <div class="reveal divider-gold"></div>
+        </div>
+
+        <!-- Grilla de 1 columna en celulares, 3 columnas en pantallas grandes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+
+            <!-- Tarjeta de Comentario 1 (Valentina) -->
+            <div class="reveal card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
+                <div class="relative flex items-center gap-4 mb-4">
+                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-lg">Valentina</h3>
+                        <span class="text-gold-300 text-sm">★★★★★</span>
+                    </div>
+                </div>
+                <p class="relative text-maggie-100 text-sm leading-relaxed">
+                    "Sumamente satisfecha y contenta con el servicio. Mis uñas resisten todo y el diseño que me hizo Lurdes quedó espectacular. ¡Súper recomendable!"
+                </p>
+            </div>
+
+            <!-- Tarjeta de Comentario 2 (Sabrina) -->
+            <div class="reveal reveal-delay-1 card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
+                <div class="relative flex items-center gap-4 mb-4">
+                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-lg">Sabrina</h3>
+                        <span class="text-gold-300 text-sm">★★★★★</span>
+                    </div>
+                </div>
+                <p class="relative text-maggie-100 text-sm leading-relaxed">
+                    "Agradezco a todo el espacio por la excelente atención. Es un lugar donde te relajas y te vas con unas manos hermosas. Vuelvo seguro."
+                </p>
+            </div>
+
+            <!-- Tarjeta de Comentario 3 (Camila) -->
+            <div class="reveal reveal-delay-2 card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
+                <div class="relative flex items-center gap-4 mb-4">
+                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-lg">Camila</h3>
+                        <span class="text-gold-300 text-sm">★★★★★</span>
+                    </div>
+                </div>
+                <p class="relative text-maggie-100 text-sm leading-relaxed">
+                    "Vengo hace más de un año y nunca me falló. La atención es súper cálida y siempre salgo con las uñas más lindas que vi en mi vida."
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Preguntas Frecuentes -->
+    <section id="faq" class="scroll-mt-24 py-12 md:py-24 bg-maggie-100">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+            <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-8 md:mb-12">
+                <p class="reveal text-gold-700 text-sm font-semibold mb-3">Dudas frecuentes</p>
+                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Preguntas Frecuentes</h2>
+                <div class="reveal divider-gold"></div>
+            </div>
+
+            <div class="space-y-3 md:space-y-4">
+                <details class="reveal faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                        ¿Cómo reservo mi turno?
+                        <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Elegí el servicio que más te guste en la sección de Servicios y tocá el botón "Reservar". Te vamos a redirigir directo a nuestro WhatsApp para coordinar día y horario.</p>
+                </details>
+
+                <details class="reveal reveal-delay-1 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                        ¿Cuánto dura el esmaltado semipermanente?
+                        <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Con el cuidado adecuado, nuestro semipermanente dura entre 3 y 4 semanas sin perder brillo ni despegarse.</p>
+                </details>
+
+                <details class="reveal reveal-delay-2 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                        ¿Puedo llevar una foto de referencia?
+                        <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">¡Por supuesto! Nos encanta trabajar con referencias. Mandanos la imagen por WhatsApp o Instagram antes de tu turno para preparar todo lo necesario.</p>
+                </details>
+
+                <details class="reveal reveal-delay-3 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                        ¿Con cuánta anticipación tengo que reservar?
+                        <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Recomendamos reservar con al menos 2 a 3 días de anticipación, ya que los turnos suelen completarse rápido.</p>
+                </details>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner de Instagram -->
+    <section class="py-12 md:py-24 relative overflow-hidden hero-gradient text-white text-center">
+        <div class="decoracion-mancha mancha-top-right float-slow" style="opacity:.08"></div>
+        <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
+        <div class="max-w-xl mx-auto reveal">
+            <p class="text-gold-300 text-sm font-semibold mb-3">Seguinos</p>
+            <h2 class="text-2xl md:text-4xl font-serif font-bold mb-4">Más inspiración en Instagram</h2>
+            <p class="text-gray-200 mb-6 md:mb-8">Descubrí nuestros últimos diseños, promos y el detrás de escena del estudio.</p>
+            <a href="https://instagram.com/maggie____nails" target="_blank" rel="noopener noreferrer" class="btn-hover inline-flex items-center gap-2 bg-white text-maggie-900 font-bold py-3 px-8 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                </svg>
+                @maggie____nails
+            </a>
+        </div>
+        </div>
+    </section>
+
+ <!-- FOOTER MEJORADO -->
+<footer class="bg-gradient-to-b from-maggie-900 to-[#1a0b2e] text-maggie-100 pt-12 md:pt-20 pb-8 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
+
+        <!-- Contenedor principal: marca + enlaces + contacto + newsletter -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-10 md:gap-y-12 pb-10 md:pb-14 border-b border-white/10 text-center sm:text-left">
+
+            <!-- Marca y Ubicación -->
+            <div class="lg:col-span-4 flex flex-col items-center sm:items-start gap-4">
+                <img src="assets/Recurso 1 logo2.png" alt="Maggie Nails" class="h-16 drop-shadow-md">
+                <p class="text-sm text-maggie-300 leading-relaxed max-w-xs">
+                    Nail studio dedicado a la durabilidad y al detalle: cada set se piensa para que tus manos hablen por vos.
+                </p>
+                <div class="flex items-center gap-2 text-maggie-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="text-sm">Ciudad de Salta, Argentina</span>
+                </div>
+            </div>
+
+            <!-- Enlaces Rápidos -->
+            <div class="lg:col-span-3 flex flex-col items-center sm:items-start">
+                <h4 class="text-white font-serif font-bold text-lg mb-6">Explorar</h4>
+                <nav class="flex flex-col gap-3 text-sm">
+                    <a href="#inicio" class="footer-link">Inicio</a>
+                    <a href="#sobre-nosotros" class="footer-link">Nosotras</a>
+                    <a href="#beneficios" class="footer-link">¿Por qué elegirnos?</a>
+                    <a href="#servicios" class="footer-link">Servicios y Precios</a>
+                    <a href="#galeria" class="footer-link">Galería de Trabajos</a>
+                    <a href="#testimonios" class="footer-link">Reseñas</a>
+                </nav>
+            </div>
+
+            <!-- Contacto y Redes -->
+            <div class="lg:col-span-2 flex flex-col items-center sm:items-start">
+                <h4 class="text-white font-serif font-bold text-lg mb-6">Contacto</h4>
+                <div class="flex flex-col gap-4">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/maggie____nails" target="_blank" rel="noopener noreferrer" class="footer-social">
+                        <span class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                            </svg>
+                        </span>
+                        <span class="text-sm font-medium">@maggie____nails</span>
+                    </a>
+
+                    <!-- WhatsApp (Acá pones el número) -->
+                    <a href="https://wa.me/5493875083919" target="_blank" rel="noopener noreferrer" class="footer-social">
+                        <span class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            </svg>
+                        </span>
+                        <span class="text-sm font-medium">+54 3875 08-3919</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Newsletter (solo visual) -->
+            <div class="lg:col-span-3 flex flex-col items-center sm:items-start">
+                <h4 class="text-white font-serif font-bold text-lg mb-6">Novedades</h4>
+                <p class="text-sm text-maggie-300 mb-4 text-center sm:text-left">Sumate para enterarte antes que nadie de promos y diseños nuevos.</p>
+                <form onsubmit="event.preventDefault();" class="w-full max-w-xs flex items-center gap-2">
+                    <label for="newsletterEmail" class="sr-only">Correo electrónico</label>
+                    <input id="newsletterEmail" type="email" required placeholder="tu@email.com" class="w-full bg-white/10 border border-white/20 rounded-full px-4 py-2.5 text-sm text-white placeholder-maggie-300 focus:outline-none focus:border-gold-500 transition-colors">
+                    <button type="submit" aria-label="Suscribirme" class="flex-shrink-0 bg-gold-500 hover:bg-gold-300 text-maggie-900 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Cierre inferior -->
+        <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-maggie-300 text-center md:text-left">
+            <p>&copy; 2026 Maggie Nails. Todos los derechos reservados.</p>
+            <p class="flex items-center gap-1.5">Diseñado con <span class="text-gold-500">♥</span> para que tus uñas hablen por vos.</p>
+            <p class="opacity-75">Desarrollado y programado por <a href="#" class="dev-credit-link font-medium">ARG Systems</a></p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Botón flotante para subir -->
+    <button id="btnSubir" onclick="window.scrollTo(0,0)" class="fixed bottom-6 right-6 bg-purple-800 text-white p-3 rounded-full shadow-lg hover:bg-purple-900 transition-all duration-300 opacity-0 pointer-events-none z-50">
+        <!-- Icono de flecha hacia arriba (Heroicons) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <!-- Script para controlar cuándo aparece y desaparece -->
+    <script>
+        const btnSubir = document.getElementById('btnSubir');
+
+        window.addEventListener('scroll', () => {
+            // Si el usuario bajó más de 300 píxeles, mostramos el botón
+            if (window.scrollY > 300) {
+                btnSubir.classList.remove('opacity-0', 'pointer-events-none');
+                btnSubir.classList.add('opacity-100');
+            } else {
+                // Si está arriba, lo ocultamos
+                btnSubir.classList.add('opacity-0', 'pointer-events-none');
+                btnSubir.classList.remove('opacity-100');
+            }
+        });
+    </script>
+
+<!-- Script para el Menú Desplegable Móvil -->
+    <script>
+        const btnMenu = document.getElementById('btnMenu');
+        const menuMovil = document.getElementById('menuMovil');
+        const opcionesMenu = document.querySelectorAll('.menu-item');
+
+        // Abre y cierra el menú al tocar la hamburguesa (con animación suave vía CSS)
+        btnMenu.addEventListener('click', () => {
+            const abierto = menuMovil.classList.toggle('menu-open');
+            btnMenu.setAttribute('aria-expanded', abierto);
+        });
+
+        // Cierra el menú automáticamente cuando el usuario elige una opción
+        opcionesMenu.forEach(opcion => {
+            opcion.addEventListener('click', () => {
+                menuMovil.classList.remove('menu-open');
+                btnMenu.setAttribute('aria-expanded', 'false');
+            });
+        });
+    </script>
+
+    <!-- Swiper.js (carrusel de la galería) -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Script de interacciones visuales (revelado al scroll, contadores, carrusel, lightbox) -->
+    <script src="scripts/main.js"></script>
+</body>
+</html>

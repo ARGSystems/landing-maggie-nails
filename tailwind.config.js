@@ -14,6 +14,10 @@ module.exports = {
         maggie: {
           900: '#4b1c71',
           700: '#7f4ca5',
+          // 600 existe solo para el boton principal del hero: blanco sobre el 500
+          // da 3.01:1 y WCAG AA pide 4.5:1 para texto de 16-18px. Este da 4.65:1
+          // y es lo mas cerca del 500 que se puede quedar pasando la norma.
+          600: '#925eb8',
           500: '#b57edc',
           300: '#dbb6ee',
           100: '#faf5ff',

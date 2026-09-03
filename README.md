@@ -325,6 +325,34 @@ etiquetas de una palabra. El `href="#beneficios"` y el `<h2>` de la sección que
 > menú hamburguesa, que ya funcionaba. Esto además arregla de paso el nav apretado que el sitio
 > arrastraba desde el commit inicial en ese mismo rango.
 
+## ♿ Accesibilidad
+
+Lighthouse da **100**. Los tres problemas que había se resolvieron así:
+
+**1. El botón "subir" no tenía nombre accesible.** Era un `<button>` con solo un SVG adentro:
+un lector de pantalla lo anunciaba como "botón" a secas, sin decir qué hace. Se agregó
+`aria-label="Volver arriba"`. Sin cambio visual.
+
+**2. El footer saltaba de `<h2>` a `<h4>`.** Los tres encabezados del footer bajaron a `<h3>`.
+No cambia cómo se ven: el Preflight de Tailwind resetea el tamaño de los encabezados y estos ya
+lo definen por clase (`text-lg`). Verificado: **0 píxeles de diferencia**.
+
+**3. Contraste insuficiente en "Ver Servicios".** Blanco sobre `maggie-500` (`#b57edc`) daba
+**3,01:1** y WCAG AA pide 4,5:1 para texto de 16-18px. Este sí es un cambio visual.
+
+Se agregó `maggie-600: #925eb8` a la paleta, usado **solo en ese botón**. No es un color
+elegido a ojo: se interpoló entre `maggie-500` y `maggie-700` buscando el punto más cercano
+al 500 que pase la norma. Queda a 65% del camino, con **4,65:1** — apenas por encima del
+mínimo, para alterar la marca lo menos posible.
+
+Alternativas descartadas y por qué:
+
+| Opción | Ratio | Problema |
+|---|---|---|
+| Texto `maggie-900` sobre el 500 | 4,10:1 | No alcanza |
+| Fondo `maggie-700` | 6,04:1 | Pasa, pero oscurece tanto que se confunde con los botones "Reservar" |
+| Agrandar el texto a `text-xl` | 3,01:1 | Calificaría como "texto grande" (pide 3:1), pero pasaría por 0,01 y cambia el tamaño del botón |
+
 ## 📊 Resultados medidos
 
 Lighthouse (móvil, CPU x4, 1638 Kbps, RTT 150 ms), comparando el estado inicial contra el actual:
@@ -332,7 +360,7 @@ Lighthouse (móvil, CPU x4, 1638 Kbps, RTT 150 ms), comparando el estado inicial
 | Categoría | Antes | Después | |
 |---|---|---|---|
 | Performance | 60 | **72** | +12 |
-| Accesibilidad | 89 | 89 | sin cambio |
+| Accesibilidad | 89 | **100** | +11 |
 | Best Practices | 100 | 100 | ya estaba |
 | SEO | 100 | 100 | ya estaba |
 
@@ -373,17 +401,6 @@ fases cerraron con **0 píxeles de diferencia**.
 ## ⚠️ Pendientes conocidos
 
 Cosas detectadas y **no** corregidas, porque implican decisiones de diseño o de contenido:
-
-### Accesibilidad (Lighthouse 89)
-
-1. **El botón "subir" no tiene nombre accesible.** Es un `<button>` con solo un ícono SVG
-   adentro: un lector de pantalla lo anuncia como "botón" a secas. Se arregla con un
-   `aria-label`. Es el único de los tres que se arregla sin tocar el diseño.
-2. **Contraste insuficiente en el botón "Ver Servicios".** Blanco sobre `maggie-500`
-   (`#b57edc`) da 3:1 y la norma WCAG AA pide 4,5:1. Arreglarlo implica oscurecer ese color
-   de marca o el texto: **es un cambio visual**.
-3. **Salto en la jerarquía de encabezados.** El footer usa `<h4>` después de un `<h2>`,
-   salteando `<h3>`. Cambiar el nivel afecta los estilos asociados.
 
 ### Otros
 

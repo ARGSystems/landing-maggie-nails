@@ -220,46 +220,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // red de resguardo: cubren el caso de entrar al sitio con un ancla en la URL,
     // donde no hay click que interceptar.
 
-    // const OFFSET_MOVIL = 76;       // = scroll-pt-[100px]
-    // const OFFSET_ESCRITORIO = 84;  // = md:scroll-pt-[120px]
+     const OFFSET_MOVIL = 76;       // = scroll-pt-[100px]
+     const OFFSET_ESCRITORIO = 84;  // = md:scroll-pt-[120px]
 
-    // const destinoDe = (id) => {
-    //     // "Inicio" es siempre el tope absoluto. La sección arranca pegada al nav,
-    //     // así que restarle el offset daría un número negativo y quedaría en 0 igual,
-    //     // pero dejarlo explícito evita depender de ese redondeo.
-    //     if (id === '#inicio') return 0;
-    //     const el = document.querySelector(id);
-    //     if (!el) return null;
-    //     const offset = window.innerWidth >= 768 ? OFFSET_ESCRITORIO : OFFSET_MOVIL;
-    //     return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - offset));
-    // };
+     const destinoDe = (id) => {
+         // "Inicio" es siempre el tope absoluto. La sección arranca pegada al nav,
+         // así que restarle el offset daría un número negativo y quedaría en 0 igual,
+         // pero dejarlo explícito evita depender de ese redondeo.
+         if (id === '#inicio') return 0;
+         const el = document.querySelector(id);
+         if (!el) return null;
+         const offset = window.innerWidth >= 768 ? OFFSET_ESCRITORIO : OFFSET_MOVIL;
+         return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - offset));
+     };
 
     // Un solo selector cubre los tres casos: los links de escritorio, los del menú
     // móvil y el del logo, que también apunta a #inicio.
-    document.querySelectorAll('.nav-shell a[href^="#"]').forEach((enlace) => {
-        enlace.addEventListener('click', function(e) {
-            e.preventDefault();
-            const id = this.getAttribute('href');
-            const destino = document.querySelector(id);
-            if (!destino) return;
+    // document.querySelectorAll('.nav-shell a[href^="#"]').forEach((enlace) => {
+    //     enlace.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         const id = this.getAttribute('href');
+    //         const destino = document.querySelector(id);
+    //         if (!destino) return;
             
-            // Ajustamos a la altura de tu menú (84px PC / 76px Celular)
-            // Si querés que frene más arriba (con más aire), subí estos números (ej: 100 y 90)
-            const offset = window.innerWidth >= 768 ? 84 : 76; 
+    //         // Ajustamos a la altura de tu menú (84px PC / 76px Celular)
+    //         // Si querés que frene más arriba (con más aire), subí estos números (ej: 100 y 90)
+    //         const offset = window.innerWidth >= 768 ? 120 : 100; 
             
-            // Calculamos la posición exacta
-            const posicion = destino.getBoundingClientRect().top + window.scrollY - offset;
+    //         // Calculamos la posición exacta
+    //         const posicion = destino.getBoundingClientRect().top + window.scrollY - offset;
             
-            // Vamos hacia allá suavemente (sin la función de "rebote" que daba error)
-            window.scrollTo({
-                top: posicion,
-                behavior: 'smooth'
-            });
+    //         // Vamos hacia allá suavemente (sin la función de "rebote" que daba error)
+    //         window.scrollTo({
+    //             top: posicion,
+    //             behavior: 'smooth'
+    //         });
             
-            // Actualizamos la URL para que quede prolijo
-            history.pushState(null, '', id);
-        });
-    });
+    //         // Actualizamos la URL para que quede prolijo
+    //         history.pushState(null, '', id);
+    //     });
+    // });
 
     // --- Menú desplegable móvil ---
     const btnMenu = document.getElementById('btnMenu');

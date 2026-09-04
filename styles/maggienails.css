@@ -566,6 +566,26 @@ body, section, header, .bg-pattern, details.faq-item {
     margin-left: -0.375rem;
 }
 
+/* Al apuntar un icono del nav flotante, su texto vuelve a desplegarse. Reusa la
+   misma transicion declarada arriba en .nav-text: no hace falta una nueva.
+   Los valores son los del estado normal, para que el texto quede identico a
+   como se ve con el nav solido.
+
+   focus-visible y no focus: asi el texto aparece al llegar con el teclado, pero
+   no al hacer click con el mouse, que ya vio el label al apuntarlo. */
+.nav-floating .nav-link:hover .nav-text,
+.nav-floating .nav-link:focus-visible .nav-text {
+    max-width: 5.5rem;
+    opacity: 1;
+    margin-left: 0;
+}
+
+/* Quien pidio menos movimiento recibe el texto igual, pero sin el deslizamiento. */
+@media (prefers-reduced-motion: reduce) {
+    .nav-floating .nav-link:hover .nav-text,
+    .nav-floating .nav-link:focus-visible .nav-text { transition: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .nav-text { transition: none; }
     body, section, header, .bg-pattern, details.faq-item { transition: none; }

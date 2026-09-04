@@ -167,6 +167,44 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSubir.addEventListener('click', () => window.scrollTo(0, 0));
     }
 
+    // --- Alternar claro / oscuro ---
+    // La resolucion inicial ya la hizo scripts/tema.js en el <head>. Aca solo
+    // se maneja el click y se mantiene sincronizada la etiqueta del boton.
+    const btnTema = document.getElementById('btnTema');
+    const GUARDADO_TEMA = 'maggie-tema';
+
+    const sincronizarBotonTema = () => {
+        const oscuro = document.documentElement.classList.contains('dark');
+        // Un <button> con solo un icono adentro no dice nada a un lector de
+        // pantalla. La etiqueta describe la ACCION, no el estado actual.
+        btnTema.setAttribute('aria-label', oscuro ? 'Activar modo claro' : 'Activar modo oscuro');
+    };
+
+    if (btnTema) {
+        sincronizarBotonTema();
+
+        btnTema.addEventListener('click', () => {
+            const oscuro = document.documentElement.classList.toggle('dark');
+            try {
+                localStorage.setItem(GUARDADO_TEMA, oscuro ? 'oscuro' : 'claro');
+            } catch (e) {
+                // Navegacion privada o cookies bloqueadas: el tema funciona
+                // igual en esta sesion, solo no se recuerda al recargar.
+            }
+            sincronizarBotonTema();
+        });
+
+        // Si el usuario nunca eligio a mano, seguir los cambios del sistema
+        // (por ejemplo el modo oscuro automatico al anochecer).
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            let eligio = null;
+            try { eligio = localStorage.getItem(GUARDADO_TEMA); } catch (err) {}
+            if (eligio) return;   // eligio explicitamente: su decision manda
+            document.documentElement.classList.toggle('dark', e.matches);
+            sincronizarBotonTema();
+        });
+    }
+
     // --- Navegación por anclas del nav, manejada a mano ---
     //
     // Antes esto dependía del comportamiento nativo: scroll-behavior: smooth más

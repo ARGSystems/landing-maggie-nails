@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bloqueante y lo mas arriba posible: define el tema antes del primer
+         pintado. Si esto corriera en main.js (al final del body) se veria un
+         destello claro antes de pasar a oscuro. -->
+    <script src="scripts/tema.js"></script>
     <title>Maggie Nails | Uñas que te acompañan</title>
     <meta name="description" content="Maggie Nails: nail studio en Salta, Argentina. Semipermanente, Kapping, Soft Gel y Poly Gel con diseños exclusivos y máxima durabilidad.">
     <!-- URL oficial: evita que el buscador trate como duplicado las variantes
@@ -67,7 +72,7 @@
     <link rel="preload" as="image" href="assets/hero-movil.webp" media="(max-width: 767px)">
     <link rel="preload" as="image" href="assets/hero.webp" media="(min-width: 768px)">
 </head>
-<body class="bg-maggie-100 text-gray-800 font-sans antialiased">
+<body class="bg-maggie-100 dark:bg-[#120726] text-gray-800 dark:text-gray-200 font-sans antialiased">
 
     <!-- Sprite de íconos del nav: se define una vez y se referencia con <use>. -->
     <svg xmlns="http://www.w3.org/2000/svg" class="absolute w-0 h-0 overflow-hidden" aria-hidden="true" focusable="false">
@@ -77,6 +82,8 @@
         <symbol id="ico-servicios" viewBox="0 0 24 24"><path d="M9.5 3.5 11 7.5l4 1.5-4 1.5-1.5 4-1.5-4L4 9l4-1.5 1.5-4ZM17.5 13.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/></symbol>
         <symbol id="ico-trabajos" viewBox="0 0 24 24"><path d="M3.75 5.25h16.5v13.5H3.75zM3.75 16.5 8.25 12l3 3 4.5-4.5 4.5 4.5"/></symbol>
         <symbol id="ico-resenas" viewBox="0 0 24 24"><path d="M12 3.75 14.4 8.7l5.35.78-3.87 3.78.91 5.34L12 16.08l-4.79 2.52.91-5.34L4.25 9.48l5.35-.78L12 3.75Z"/></symbol>
+        <symbol id="ico-sol" viewBox="0 0 24 24"><path d="M12 4.5V3M12 21v-1.5M19.5 12H21M3 12h1.5M17.3 6.7l1.06-1.06M5.64 18.36l1.06-1.06M17.3 17.3l1.06 1.06M5.64 5.64 6.7 6.7M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/></symbol>
+        <symbol id="ico-luna" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"/></symbol>
         <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M9.75 9.75a2.25 2.25 0 1 1 3 2.121V13.5M12 17.25h.008M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></symbol>
     </svg>
 
@@ -91,22 +98,35 @@
                 <img src="assets/logo-header.webp" alt="Icono Maggie Nails" width="652" height="130" fetchpriority="high" decoding="async" class="h-7 md:h-9 w-auto drop-shadow-md">
             </a>
 
-            <!-- Botón de Menú Hamburguesa (Solo visible en celulares, touch target amplio) -->
-            <button id="btnMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuMovil" class="lg:hidden -mr-2 p-3 text-white hover:text-maggie-300 active:bg-white/10 rounded-lg transition-colors focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+            <!-- Todo el lado derecho agrupado: asi justify-between sigue viendo
+                 dos hijos y el reparto no cambia al sumar el boton de tema. -->
+            <div class="flex items-center gap-1 lg:gap-4">
 
-            <!-- Enlaces Ancla (Escritorio - Ocultos en celular) -->
-            <div class="hidden lg:flex items-center space-x-4 xl:space-x-6 text-sm xl:text-base font-medium">
-                <a href="#inicio" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-inicio"/></svg>Inicio</a>
-                <a href="#sobre-nosotros" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-nosotras"/></svg>Nosotras</a>
-                <a href="#beneficios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-beneficios"/></svg>Beneficios</a>
-                <a href="#servicios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-servicios"/></svg>Servicios</a>
-                <a href="#galeria" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-trabajos"/></svg>Trabajos</a>
-                <a href="#testimonios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-resenas"/></svg>Reseñas</a>
-                <a href="#faq" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-faq"/></svg>FAQ</a>
+                <!-- Enlaces Ancla (Escritorio - Ocultos en celular) -->
+                <div class="hidden lg:flex items-center space-x-4 xl:space-x-6 text-sm xl:text-base font-medium">
+                    <a href="#inicio" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-inicio"/></svg><span class="nav-text">Inicio</span></a>
+                    <a href="#sobre-nosotros" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-nosotras"/></svg><span class="nav-text">Nosotras</span></a>
+                    <a href="#beneficios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-beneficios"/></svg><span class="nav-text">Beneficios</span></a>
+                    <a href="#servicios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-servicios"/></svg><span class="nav-text">Servicios</span></a>
+                    <a href="#galeria" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-trabajos"/></svg><span class="nav-text">Trabajos</span></a>
+                    <a href="#testimonios" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-resenas"/></svg><span class="nav-text">Reseñas</span></a>
+                    <a href="#faq" class="nav-link inline-flex items-center gap-1.5 hover:text-maggie-300 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-faq"/></svg><span class="nav-text">FAQ</span></a>
+                </div>
+
+                <!-- Alternar claro / oscuro. El aria-label lo actualiza main.js:
+                     un boton con solo un icono adentro no dice nada por si mismo. -->
+                <button id="btnTema" type="button" aria-label="Activar modo oscuro"
+                        class="p-3 lg:p-2 text-white hover:text-maggie-300 active:bg-white/10 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-luna"/></svg>
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#ico-sol"/></svg>
+                </button>
+
+                <!-- Botón de Menú Hamburguesa (Solo visible en celulares, touch target amplio) -->
+                <button id="btnMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuMovil" class="lg:hidden -mr-2 p-3 text-white hover:text-maggie-300 active:bg-white/10 rounded-lg transition-colors focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -175,61 +195,61 @@
     <section id="beneficios" class="bg-pattern py-12 md:py-24 relative">
         <div class="max-w-6xl mx-auto px-4 md:px-8 text-center">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Nuestro sello</p>
-            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">¿Por qué elegirnos?</h2>
+            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 dark:text-maggie-300 mb-4">¿Por qué elegirnos?</h2>
             <div class="reveal divider-gold mb-4"></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8 md:mt-10 max-w-4xl mx-auto">
-                <div class="reveal card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                <div class="reveal card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 dark:border-white/10 shadow-sm">
                     <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">✨</div>
-                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Durabilidad Extrema</h3>
-                    <p class="text-gray-600">Trabajamos con técnicas y productos de primera línea para que tus uñas resistan tu ritmo de vida sin despegarse.</p>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 dark:text-maggie-300 font-serif">Durabilidad Extrema</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Trabajamos con técnicas y productos de primera línea para que tus uñas resistan tu ritmo de vida sin despegarse.</p>
                 </div>
-                <div class="reveal reveal-delay-1 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                <div class="reveal reveal-delay-1 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 dark:border-white/10 shadow-sm">
                     <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">🎨</div>
-                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Diseños Únicos</h3>
-                    <p class="text-gray-600">Vos traés la idea, nosotras la hacemos realidad. Personalización total en cada set.</p>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 dark:text-maggie-300 font-serif">Diseños Únicos</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Vos traés la idea, nosotras la hacemos realidad. Personalización total en cada set.</p>
                 </div>
-                <div class="reveal reveal-delay-2 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 shadow-sm">
+                <div class="reveal reveal-delay-2 card-hover p-6 rounded-2xl bg-white/70 backdrop-blur border border-maggie-200 dark:border-white/10 shadow-sm">
                     <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-maggie-500 to-maggie-900 flex items-center justify-center text-2xl mb-5 shadow-md">💖</div>
-                    <h3 class="font-bold text-xl mb-2 text-maggie-900 font-serif">Atención Cercana</h3>
-                    <p class="text-gray-600">Un espacio pensado para que te relajes y disfrutes de tu momento de cuidado personal.</p>
+                    <h3 class="font-bold text-xl mb-2 text-maggie-900 dark:text-maggie-300 font-serif">Atención Cercana</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Un espacio pensado para que te relajes y disfrutes de tu momento de cuidado personal.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Sobre Nosotros -->
-    <section id="sobre-nosotros" class="py-12 md:py-24 bg-maggie-100 relative overflow-hidden">
+    <section id="sobre-nosotros" class="py-12 md:py-24 bg-maggie-100 dark:bg-[#120726] relative overflow-hidden">
         <div class="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
             <div class="reveal relative">
                 <div class="absolute -inset-4 bg-gradient-to-br from-maggie-300/40 to-gold-300/40 rounded-[2rem] blur-2xl"></div>
                 <img src="images/img2.webp" srcset="images/img2-400.webp 400w, images/img2-800.webp 800w, images/img2.webp 1080w" sizes="(min-width: 1024px) 520px, (min-width: 640px) 45vw, 92vw" alt="Trabajo de uñas realizado en Maggie Nails" width="1080" height="1076" loading="lazy" decoding="async" class="relative rounded-[2rem] shadow-2xl w-full h-[260px] sm:h-[320px] md:h-[420px] object-cover border-4 border-white">
-                <div class="hidden md:flex absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl px-6 py-4 items-center gap-3 border border-maggie-200">
-                    <span class="text-3xl font-serif font-bold text-maggie-900"><span data-counter="1200">0</span>+</span>
-                    <span class="text-xs text-gray-500 leading-tight max-w-[90px]">diseños realizados con amor</span>
+                <div class="hidden md:flex absolute -bottom-6 -right-6 bg-white dark:bg-[#1e1030] rounded-2xl shadow-xl px-6 py-4 items-center gap-3 border border-maggie-200 dark:border-white/10">
+                    <span class="text-3xl font-serif font-bold text-maggie-900 dark:text-maggie-300"><span data-counter="1200">0</span>+</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 leading-tight max-w-[90px]">diseños realizados con amor</span>
                 </div>
             </div>
 
             <div class="reveal reveal-delay-1 text-center md:text-left">
                 <p class="text-gold-700 text-sm font-semibold mb-3">Sobre nosotros</p>
-                <h2 class="text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4 md:mb-6">La pasión detrás de cada diseño</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">
+                <h2 class="text-2xl md:text-4xl font-serif font-bold text-maggie-900 dark:text-maggie-300 mb-4 md:mb-6">La pasión detrás de cada diseño</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                     Maggie Nails nació de las ganas de convertir el cuidado de tus uñas en una experiencia de verdad especial. Cada set se piensa a medida, cuidando cada detalle desde la preparación de la uña hasta el último toque de brillo.
                 </p>
-                <p class="text-gray-600 mb-6 md:mb-8 leading-relaxed">
+                <p class="text-gray-600 dark:text-gray-400 mb-6 md:mb-8 leading-relaxed">
                     Nos formamos constantemente en las técnicas más nuevas del mercado para ofrecerte resultados que no solo se ven increíbles, sino que además duran. Porque sabemos que tus manos hablan de vos todos los días.
                 </p>
                 <div class="grid grid-cols-3 gap-4 mb-6 md:mb-8">
                     <div class="text-center">
-                        <p class="text-2xl font-serif font-bold text-maggie-900"><span data-counter="3">0</span>+</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Años</p>
+                        <p class="text-2xl font-serif font-bold text-maggie-900 dark:text-maggie-300"><span data-counter="3">0</span>+</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1">Años</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-serif font-bold text-maggie-900"><span data-counter="500">0</span>+</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Clientas</p>
+                        <p class="text-2xl font-serif font-bold text-maggie-900 dark:text-maggie-300"><span data-counter="500">0</span>+</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1">Clientas</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-serif font-bold text-maggie-900">100%</p>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide mt-1">Dedicación</p>
+                        <p class="text-2xl font-serif font-bold text-maggie-900 dark:text-maggie-300">100%</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1">Dedicación</p>
                     </div>
                 </div>
                 <a href="#servicios" class="btn-hover inline-block w-full sm:w-auto text-center bg-maggie-900 text-white font-semibold py-3.5 sm:py-3 px-8 rounded-full">Conocé nuestros servicios</a>
@@ -242,46 +262,46 @@
         <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
             <div class="text-center mb-10 md:mb-14">
                 <p class="reveal text-gold-700 text-sm font-semibold mb-3">Menú de servicios</p>
-                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Nuestros Servicios</h2>
+                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 dark:text-maggie-300 mb-4">Nuestros Servicios</h2>
                 <div class="reveal divider-gold mb-4"></div>
-                <p class="reveal text-gray-600 text-base md:text-lg font-medium">Consultá por promos, descuentos y extras por mensaje privado.</p>
+                <p class="reveal text-gray-600 dark:text-gray-400 text-base md:text-lg font-medium">Consultá por promos, descuentos y extras por mensaje privado.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
                 <!-- Card Semipermanente -->
-                <div class="reveal relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">💅</div>
-                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Semipermanente</h3>
-                    <p class="text-gray-500 mb-6 text-sm">Color duradero y brillo impecable para tus uñas naturales.</p>
-                    <div class="text-3xl font-black text-maggie-900 mb-6">$14.000</div>
+                <div class="reveal relative bg-white dark:bg-[#1e1030] rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 dark:bg-[#120726] flex items-center justify-center text-xl mb-4">💅</div>
+                    <h3 class="text-xl font-bold text-maggie-700 dark:text-maggie-300 mb-4 tracking-tight">Semipermanente</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">Color duradero y brillo impecable para tus uñas naturales.</p>
+                    <div class="text-3xl font-black text-maggie-900 dark:text-maggie-300 mb-6">$14.000</div>
                     <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Semipermanente" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
                 </div>
 
                 <!-- Card Kapping -->
-                <div class="reveal reveal-delay-1 relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">🛡️</div>
-                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Kapping</h3>
-                    <p class="text-gray-500 mb-6 text-sm">Refuerzo ideal para uñas débiles o quebradizas. Crecen sanas.</p>
-                    <div class="text-3xl font-black text-maggie-900 mb-6">$16.000</div>
+                <div class="reveal reveal-delay-1 relative bg-white dark:bg-[#1e1030] rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 dark:bg-[#120726] flex items-center justify-center text-xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold text-maggie-700 dark:text-maggie-300 mb-4 tracking-tight">Kapping</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">Refuerzo ideal para uñas débiles o quebradizas. Crecen sanas.</p>
+                    <div class="text-3xl font-black text-maggie-900 dark:text-maggie-300 mb-6">$16.000</div>
                     <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Kapping" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
                 </div>
 
                 <!-- Card Soft Gel -->
-                <div class="reveal reveal-delay-2 relative bg-white rounded-3xl p-6 shadow-lg border-2 border-gold-500 card-hover text-center">
+                <div class="reveal reveal-delay-2 relative bg-white dark:bg-[#1e1030] rounded-3xl p-6 shadow-lg border-2 border-gold-500 card-hover text-center">
                     <span class="badge-popular">Más elegido</span>
-                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">🌸</div>
-                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Soft Gel</h3>
-                    <p class="text-gray-500 mb-6 text-sm">Extensiones ligeras, flexibles y de aspecto súper natural.</p>
-                    <div class="text-3xl font-black text-maggie-900 mb-6">$24.000</div>
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 dark:bg-[#120726] flex items-center justify-center text-xl mb-4">🌸</div>
+                    <h3 class="text-xl font-bold text-maggie-700 dark:text-maggie-300 mb-4 tracking-tight">Soft Gel</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">Extensiones ligeras, flexibles y de aspecto súper natural.</p>
+                    <div class="text-3xl font-black text-maggie-900 dark:text-maggie-300 mb-6">$24.000</div>
                     <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Soft%20Gel" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
                 </div>
 
                 <!-- Card Poly Gel -->
-                <div class="reveal reveal-delay-3 relative bg-white rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 flex items-center justify-center text-xl mb-4">💎</div>
-                    <h3 class="text-xl font-bold text-maggie-700 mb-4 tracking-tight">Poly Gel</h3>
-                    <p class="text-gray-500 mb-6 text-sm">Máxima resistencia y estructura perfecta para extensiones largas.</p>
-                    <div class="text-3xl font-black text-maggie-900 mb-6">$26.000</div>
+                <div class="reveal reveal-delay-3 relative bg-white dark:bg-[#1e1030] rounded-3xl p-6 shadow-md border border-maggie-300 card-hover text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-maggie-100 dark:bg-[#120726] flex items-center justify-center text-xl mb-4">💎</div>
+                    <h3 class="text-xl font-bold text-maggie-700 dark:text-maggie-300 mb-4 tracking-tight">Poly Gel</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">Máxima resistencia y estructura perfecta para extensiones largas.</p>
+                    <div class="text-3xl font-black text-maggie-900 dark:text-maggie-300 mb-6">$26.000</div>
                     <a href="https://wa.me/5493875083919?text=Hola,%20quiero%20reservar%20un%20turno%20para%20Poly%20Gel" class="block w-full bg-maggie-900 text-white font-semibold py-2 rounded-xl btn-hover">Reservar</a>
                 </div>
             </div>
@@ -292,9 +312,9 @@
     <section id="galeria" class="bg-pattern py-12 md:py-24 text-center relative">
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Portfolio</p>
-            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Nuestros Trabajos</h2>
+            <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 dark:text-maggie-300 mb-4">Nuestros Trabajos</h2>
             <div class="reveal divider-gold mb-6"></div>
-            <p class="reveal text-gray-600 mb-8 md:mb-12 max-w-xl mx-auto">Trabajo real, resultados reales. Cientos de manos felices confían en la durabilidad de Maggie Nails.</p>
+            <p class="reveal text-gray-600 dark:text-gray-400 mb-8 md:mb-12 max-w-xl mx-auto">Trabajo real, resultados reales. Cientos de manos felices confían en la durabilidad de Maggie Nails.</p>
 
             <div class="reveal swiper gallery-swiper pb-12">
                 <div class="swiper-wrapper">
@@ -353,7 +373,7 @@
     <section id="testimonios" class="py-12 md:py-24 px-4 md:px-8 max-w-6xl mx-auto">
         <div class="text-center mb-10 md:mb-14">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Testimonios</p>
-            <h2 class="reveal text-2xl md:text-4xl font-bold text-maggie-900 font-serif mb-4">Qué dicen nuestras clientas</h2>
+            <h2 class="reveal text-2xl md:text-4xl font-bold text-maggie-900 dark:text-maggie-300 font-serif mb-4">Qué dicen nuestras clientas</h2>
             <div class="reveal divider-gold"></div>
         </div>
 
@@ -365,7 +385,7 @@
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
                     <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
-                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
@@ -386,7 +406,7 @@
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
                     <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
-                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
@@ -407,7 +427,7 @@
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
                     <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
-                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 flex items-center justify-center flex-shrink-0">
+                    <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
@@ -427,46 +447,46 @@
     </section>
 
     <!-- Preguntas Frecuentes -->
-    <section id="faq" class="py-12 md:py-24 bg-maggie-100">
+    <section id="faq" class="py-12 md:py-24 bg-maggie-100 dark:bg-[#120726]">
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <div class="max-w-3xl mx-auto">
             <div class="text-center mb-8 md:mb-12">
                 <p class="reveal text-gold-700 text-sm font-semibold mb-3">Dudas frecuentes</p>
-                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Preguntas Frecuentes</h2>
+                <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 dark:text-maggie-300 mb-4">Preguntas Frecuentes</h2>
                 <div class="reveal divider-gold"></div>
             </div>
 
             <div class="space-y-3 md:space-y-4">
-                <details class="reveal faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
-                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                <details class="reveal faq-item bg-white dark:bg-[#1e1030] rounded-2xl shadow-sm border border-maggie-200 dark:border-white/10 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 dark:text-maggie-300 py-2">
                         ¿Cómo reservo mi turno?
                         <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
                     </summary>
-                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Elegí el servicio que más te guste en la sección de Servicios y tocá el botón "Reservar". Te vamos a redirigir directo a nuestro WhatsApp para coordinar día y horario.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-4 leading-relaxed">Elegí el servicio que más te guste en la sección de Servicios y tocá el botón "Reservar". Te vamos a redirigir directo a nuestro WhatsApp para coordinar día y horario.</p>
                 </details>
 
-                <details class="reveal reveal-delay-1 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
-                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                <details class="reveal reveal-delay-1 faq-item bg-white dark:bg-[#1e1030] rounded-2xl shadow-sm border border-maggie-200 dark:border-white/10 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 dark:text-maggie-300 py-2">
                         ¿Cuánto dura el esmaltado semipermanente?
                         <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
                     </summary>
-                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Con el cuidado adecuado, nuestro semipermanente dura entre 3 y 4 semanas sin perder brillo ni despegarse.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-4 leading-relaxed">Con el cuidado adecuado, nuestro semipermanente dura entre 3 y 4 semanas sin perder brillo ni despegarse.</p>
                 </details>
 
-                <details class="reveal reveal-delay-2 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
-                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                <details class="reveal reveal-delay-2 faq-item bg-white dark:bg-[#1e1030] rounded-2xl shadow-sm border border-maggie-200 dark:border-white/10 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 dark:text-maggie-300 py-2">
                         ¿Puedo llevar una foto de referencia?
                         <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
                     </summary>
-                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">¡Por supuesto! Nos encanta trabajar con referencias. Mandanos la imagen por WhatsApp o Instagram antes de tu turno para preparar todo lo necesario.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-4 leading-relaxed">¡Por supuesto! Nos encanta trabajar con referencias. Mandanos la imagen por WhatsApp o Instagram antes de tu turno para preparar todo lo necesario.</p>
                 </details>
 
-                <details class="reveal reveal-delay-3 faq-item bg-white rounded-2xl shadow-sm border border-maggie-200 p-5 md:p-6">
-                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 py-2">
+                <details class="reveal reveal-delay-3 faq-item bg-white dark:bg-[#1e1030] rounded-2xl shadow-sm border border-maggie-200 dark:border-white/10 p-5 md:p-6">
+                    <summary class="flex items-center justify-between gap-4 font-semibold text-maggie-900 dark:text-maggie-300 py-2">
                         ¿Con cuánta anticipación tengo que reservar?
                         <span class="faq-icon text-gold-500 text-2xl leading-none flex-shrink-0">+</span>
                     </summary>
-                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">Recomendamos reservar con al menos 2 a 3 días de anticipación, ya que los turnos suelen completarse rápido.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-4 leading-relaxed">Recomendamos reservar con al menos 2 a 3 días de anticipación, ya que los turnos suelen completarse rápido.</p>
                 </details>
             </div>
             </div>

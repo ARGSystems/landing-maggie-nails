@@ -504,3 +504,69 @@ details.faq-item[open] .faq-icon {
 details.faq-item[open] {
     border-color: var(--gold);
 }
+
+/* ===========================================================
+   MODO OSCURO
+   =========================================================== */
+
+/* Le avisa al navegador que tema esta activo, para que pinte las barras de
+   scroll y los controles nativos acordes. Sin esto quedan blancas. */
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+
+/* Estos colores estan escritos a mano en este archivo, asi que las variantes
+   dark: de Tailwind no los alcanzan. Hay que apagarlos aca.
+   .bg-pattern es el fondo de tres secciones: sin esta regla quedan claras. */
+.dark .bg-pattern {
+    background-color: #150a26;
+    background-blend-mode: overlay;
+}
+.dark ::-webkit-scrollbar-track { background: #150a26; }
+.dark ::-webkit-scrollbar-thumb { background: linear-gradient(#7f4ca5, #2a0f42); }
+
+/* Las flechas del carrusel son blancas sobre fondo claro. */
+.dark .gallery-swiper .swiper-button-next,
+.dark .gallery-swiper .swiper-button-prev {
+    background: #2a0f42;
+    color: #dbb6ee;
+}
+.dark .gallery-swiper .swiper-pagination-bullet { background: #dbb6ee; }
+
+/* La transicion evita el corte seco al alternar. Se limita a color y fondo:
+   poner `all` haria que tambien animen transforms y sombras de media pagina. */
+body, section, header, .bg-pattern, details.faq-item {
+    transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+}
+
+
+/* ===========================================================
+   NAV MINIMALISTA AL FLOTAR: se colapsa el texto, quedan los iconos
+   =========================================================== */
+
+.nav-text {
+    display: inline-block;
+    overflow: hidden;       /* convierte el achique en recorte visual */
+    white-space: nowrap;    /* impide que el texto se parta en dos lineas
+                               mientras se queda sin ancho */
+    /* Apenas por encima de la etiqueta mas larga ("Beneficios"). Un valor muy
+       holgado haria que la primera mitad de la animacion no se vea: iria de
+       320px a 70px sin ningun cambio visible. */
+    max-width: 5.5rem;
+    opacity: 1;
+    transition: max-width .3s ease, opacity .18s ease, margin-left .3s ease;
+}
+
+/* Solo el nav de escritorio. En el menu movil el texto se queda siempre. */
+.nav-floating .nav-link .nav-text {
+    max-width: 0;
+    opacity: 0;
+    /* Cancela el gap-1.5 del link (0.375rem). El gap es del contenedor, no del
+       texto: aunque el texto mida cero, el hueco sigue ahi y el icono queda
+       con un espacio muerto a la derecha. */
+    margin-left: -0.375rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-text { transition: none; }
+    body, section, header, .bg-pattern, details.faq-item { transition: none; }
+}

@@ -466,6 +466,62 @@ Alternativas descartadas y por qué:
 | Fondo `maggie-700` | 6,04:1 | Pasa, pero oscurece tanto que se confunde con los botones "Reservar" |
 | Agrandar el texto a `text-xl` | 3,01:1 | Calificaría como "texto grande" (pide 3:1), pero pasaría por 0,01 y cambia el tamaño del botón |
 
+## 🌗 Modo claro / oscuro
+
+Botón en el nav con sol y luna. La clase `dark` va en `<html>` y `tailwind.config.js` usa
+`darkMode: 'class'`, así que cada `dark:*` se compila con el selector `:is(.dark *)`. No se
+carga ni descarga CSS al alternar: las dos versiones de cada regla ya están en el archivo
+compilado y el navegador solo re-evalúa qué selectores coinciden.
+
+**Precedencia:** lo que el usuario eligió (`localStorage`) gana siempre; si nunca eligió, se
+sigue `prefers-color-scheme`; si tampoco, claro.
+
+### Por qué el tema se inicializa en `scripts/tema.js` y no en `main.js`
+
+Porque `main.js` corre al final del `<body>`, y para entonces la página ya se pintó: se vería
+un destello blanco antes de saltar a oscuro. La solución estándar es un script bloqueante en el
+`<head>`, normalmente **inline**. Acá no se puede: la CSP declara `script-src 'self'` y bloquea
+todo script inline. Por eso vive en su propio archivo, cargado sin `defer` ni `async`.
+
+`localStorage` se lee dentro de un `try/catch`: en navegación privada o con las cookies de
+sitio bloqueadas no devuelve `null`, **lanza excepción**, y sin la guarda el script se cae antes
+de que exista la página.
+
+### Lo que las clases `dark:` no alcanzan
+
+`maggienails.css` tiene colores escritos a mano —el `#faf5ff` de `.bg-pattern`, que es el fondo
+de **tres secciones**, más la barra de scroll y las flechas del carrusel—. Las variantes de
+Tailwind no los ven. Tienen sus propias reglas `.dark` en ese archivo.
+
+## 🔎 Nav minimalista al flotar
+
+Al pasar a `.nav-floating`, el texto de los links de escritorio se colapsa y quedan los íconos.
+El bloque de links pasa de **722px a 256px**.
+
+No se usa `display: none` porque `display` es una propiedad **discreta**: no tiene valores
+intermedios, el navegador no puede interpolarla y cualquier `transition` sobre ella se ignora.
+La combinación que sí anima:
+
+| Propiedad | Rol |
+|---|---|
+| `max-width` de `5.5rem` a `0` | Hace el trabajo de layout. Es una longitud, así que interpola |
+| `overflow: hidden` | Convierte esa reducción en recorte visual |
+| `white-space: nowrap` | Impide que el texto se parta en dos líneas al quedarse sin ancho |
+| `opacity` (más rápida) | Termina de desvanecer antes de que el hueco cierre |
+| `margin-left: -0.375rem` | Cancela el `gap-1.5` del link |
+
+Ese margen negativo no es cosmético: el `gap` es propiedad del contenedor, no del texto. Aunque
+el texto mida cero, el hueco sigue ahí y el ícono queda con un espacio muerto a la derecha.
+
+> El valor de `max-width` está ajustado apenas por encima de la etiqueta más larga. Uno holgado
+> —`20rem` para un texto de 70px— haría que la primera mitad de la animación no se vea.
+
+Medido cuadro a cuadro: ancho 41 → 17 → 7 → 0px, opacidad 1 → 0.74 → 0.24 → 0, margen 0 → -6px.
+
+> ⚠️ **El botón del tema no puede ser más alto que el logo.** Con `p-2.5` medía 40px contra los
+> 36px del logo y **agrandaba el nav de 68 a 72px en escritorio**, corriendo la página entera.
+> Va con `p-3 lg:p-2`: 44px en móvil (área táctil) y 36px en escritorio.
+
 ## 📊 Resultados medidos
 
 Lighthouse (móvil, CPU x4, 1638 Kbps, RTT 150 ms), comparando el estado inicial contra el actual:

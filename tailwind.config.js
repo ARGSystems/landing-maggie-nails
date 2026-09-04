@@ -1,5 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // Habilita el selector manual: cada dark:* se compila como `.dark .dark:*`,
+  // asi que la clase `dark` en <html> activa todas las variantes de una.
+  // Con 'media' quedaria atado a prefers-color-scheme y el boton no serviria.
+  darkMode: 'class',
+
   // Archivos que Tailwind escanea para decidir que utilidades generar (purga lo demas).
   // scripts/ se incluye porque main.js agrega clases por JS (overflow-hidden, hidden)
   // que no siempre estan escritas en el HTML.

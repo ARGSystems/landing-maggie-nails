@@ -306,8 +306,37 @@ Tres detalles del porqué:
 - **El padding bajó a `py-12 md:py-16`.** Ya no empuja el contenido al medio; queda solo como
   margen de respiro para pantallas muy bajas donde el contenido no entra.
 
-Resultado medido: el H1, los botones y la franja de confianza entran sin scroll en 375, 768,
-1440, 1512 y 1920 px, y el header no salta más de **16px** entre breakpoints.
+#### Pantallas bajas: el caso que `min-height` no cubre
+
+Centrar y dar altura mínima no alcanza en notebooks de pantalla baja, y conviene entender por qué:
+**`min-height` es un mínimo**, así que no hace nada cuando el problema es el contrario — que el
+contenido pide más alto del que hay. El hero mide 765px por lo que contiene, y a 1366x768 (de las
+resoluciones de notebook más comunes) quedan 700px después del nav.
+
+La solución es comprimir el contenido, y hacerlo por **alto de viewport**, no por ancho: es un
+problema de pantallas bajas, no de pantallas angostas. Un `@media (max-height: 840px)` achica el
+logo, los paddings y los márgenes del hero. Las pantallas altas quedan exactamente igual.
+
+| Resolución | Antes | Después |
+|---|---|---|
+| 1280x720 | faltaban 49px | sobran 71px |
+| **1366x768** | **faltaba 1px** | **sobran 95px** |
+| 1440x700 | faltaban 69px | sobran 61px |
+| 1512x780 | sobraban 11px | sobran 101px |
+| 1920x1080 | sobraban 188px | sobran 188px (sin cambio) |
+
+Sigue sin entrar en 1280x600, donde faltan 11px (antes faltaban 169). Es un alto de viewport muy
+poco frecuente en escritorio y el H1 y los botones se ven igual.
+
+#### El offset de las anclas
+
+El nav es fijo, así que al saltar a una sección hay que descontarlo o el título queda tapado.
+Se resuelve con `scroll-pt-[100px] md:scroll-pt-[120px]` en la etiqueta `<html>`: una sola
+declaración de `scroll-padding-top` sobre el contenedor de scroll, en vez de repetir un
+`scroll-mt` en cada sección. Menos lugares donde olvidarse al agregar una sección nueva.
+
+Holgura medida entre la píldora flotante y el título: 16px en móvil, 28px en tablet y 36px en
+escritorio.
 
 ### Nav flotante al scrollear
 

@@ -92,6 +92,34 @@ html {
 @media (min-width: 1024px) {
     .hero-bg { --nav-alto: 4.25rem; } /* 68px  — desde 1024px: py-4 + logo h-9 */
 }
+
+/* En notebooks de pantalla baja el contenido del hero mide más que el espacio
+   disponible y las estadísticas quedan abajo del pliegue. Ojo: min-height no
+   resuelve esto, porque es un MÍNIMO y acá el problema es al revés — el
+   contenido pide de más. Hay que comprimirlo.
+
+   Medido sobre la página real: el hero pide 765px. A 1366x768 (de las
+   resoluciones de notebook más comunes) quedan 700px disponibles después del
+   nav, así que sobraban 65px. A 1280x720, 117px.
+
+   Se dispara por ALTO de viewport, no por ancho: es un problema de pantallas
+   bajas, no de pantallas angostas. Las pantallas altas quedan intactas. */
+@media (min-width: 768px) and (max-height: 840px) {
+    .hero-bg .hero-contenido {
+        padding-block: 2rem;              /* md:py-16 (4rem) -> 2rem   = -64px */
+    }
+    .hero-bg .hero-logo {
+        width: 8rem;                      /* md:w-44 (11rem) -> 8rem   = -54px */
+        margin-bottom: 1.25rem;           /* md:mb-8 (2rem)            = -12px */
+    }
+    .hero-bg .hero-texto {
+        margin-bottom: 1.5rem;            /* md:mb-10 (2.5rem)         = -16px */
+    }
+    .hero-bg .hero-datos {
+        margin-top: 1.5rem;               /* md:mt-14 (3.5rem)         = -32px */
+        padding-top: 1.25rem;             /* md:pt-8 (2rem)            = -12px */
+    }
+}
 @media (min-width: 768px) {
     .hero-bg {
         background-image:

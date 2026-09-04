@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="scroll-smooth scroll-pt-[100px] md:scroll-pt-[120px]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -126,20 +126,20 @@
     </nav>
 
     <!-- Header / Hero Section -->
-    <header id="inicio" class="hero-bg scroll-mt-24 relative overflow-hidden text-white bg-maggie-900 bg-cover bg-center">
+    <header id="inicio" class="hero-bg relative overflow-hidden text-white bg-maggie-900 bg-cover bg-center">
         <!-- Overlay: oscuro y sólido en móvil, degradado de izquierda a derecha en escritorio -->
         <div class="absolute inset-0 bg-[#1a0b2e]/70 md:hidden"></div>
         <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-[#1a0b2e] via-[#1a0b2e]/80 to-transparent"></div>
 
-        <div class="relative z-10 w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-16 flex flex-col items-center text-center md:items-start md:text-left">
+        <div class="hero-contenido relative z-10 w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-16 flex flex-col items-center text-center md:items-start md:text-left">
             <div class="w-full md:max-w-lg">
 
-                <img src="assets/logo-maggie.webp" alt="Logo Maggie Nails" width="750" height="842" fetchpriority="high" decoding="async" class="animate-fade-up w-28 sm:w-32 md:w-44 mb-5 md:mb-8 drop-shadow-lg">
+                <img src="assets/logo-maggie.webp" alt="Logo Maggie Nails" width="750" height="842" fetchpriority="high" decoding="async" class="hero-logo animate-fade-up w-28 sm:w-32 md:w-44 mb-5 md:mb-8 drop-shadow-lg">
 
                 <h1 class="animate-fade-up delay-1 font-accent italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] leading-tight text-maggie-300 mb-3 md:mb-4">
                     Trabajo real, resultados reales.
                 </h1>
-                <p class="animate-fade-up delay-2 text-base md:text-lg text-gray-200 leading-relaxed mb-6 md:mb-10 max-w-md mx-auto md:mx-0">
+                <p class="hero-texto animate-fade-up delay-2 text-base md:text-lg text-gray-200 leading-relaxed mb-6 md:mb-10 max-w-md mx-auto md:mx-0">
                     Olvidate del esmalte saltado a los dos días. Diseños exclusivos y un servicio enfocado en la durabilidad para que tus manos luzcan impecables por semanas.
                 </p>
 
@@ -153,7 +153,7 @@
                 </div>
 
                 <!-- Franja de confianza -->
-                <div class="animate-fade-up delay-4 mt-8 md:mt-14 flex justify-center md:justify-start gap-6 sm:gap-10 border-t border-white/15 pt-6 md:pt-8 w-full">
+                <div class="hero-datos animate-fade-up delay-4 mt-8 md:mt-14 flex justify-center md:justify-start gap-6 sm:gap-10 border-t border-white/15 pt-6 md:pt-8 w-full">
                     <div class="text-center md:text-left">
                         <p class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gold-300"><span data-counter="500">0</span>+</p>
                         <p class="text-[11px] sm:text-xs text-gray-300 mt-1">Clientas felices</p>
@@ -172,7 +172,7 @@
     </header>
 
     <!-- Promesa de Valor / Diferencial -->
-    <section id="beneficios" class="scroll-mt-24 bg-pattern py-12 md:py-24 relative">
+    <section id="beneficios" class="bg-pattern py-12 md:py-24 relative">
         <div class="max-w-6xl mx-auto px-4 md:px-8 text-center">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Nuestro sello</p>
             <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">¿Por qué elegirnos?</h2>
@@ -198,7 +198,7 @@
     </section>
 
     <!-- Sobre Nosotros -->
-    <section id="sobre-nosotros" class="scroll-mt-24 py-12 md:py-24 bg-maggie-100 relative overflow-hidden">
+    <section id="sobre-nosotros" class="py-12 md:py-24 bg-maggie-100 relative overflow-hidden">
         <div class="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
             <div class="reveal relative">
                 <div class="absolute -inset-4 bg-gradient-to-br from-maggie-300/40 to-gold-300/40 rounded-[2rem] blur-2xl"></div>
@@ -238,7 +238,7 @@
     </section>
 
     <!-- Nuestros Servicios con fondo de Pattern -->
-    <section id="servicios" class="scroll-mt-24 bg-pattern py-12 md:py-24">
+    <section id="servicios" class="bg-pattern py-12 md:py-24">
         <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
             <div class="text-center mb-10 md:mb-14">
                 <p class="reveal text-gold-700 text-sm font-semibold mb-3">Menú de servicios</p>
@@ -289,7 +289,7 @@
     </section>
 
 <!-- Galería / Nuestros Trabajos -->
-    <section id="galeria" class="scroll-mt-24 bg-pattern py-12 md:py-24 text-center relative">
+    <section id="galeria" class="bg-pattern py-12 md:py-24 text-center relative">
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Portfolio</p>
             <h2 class="reveal text-2xl md:text-4xl font-serif font-bold text-maggie-900 mb-4">Nuestros Trabajos</h2>
@@ -350,7 +350,7 @@
     </div>
 
         <!-- Sección de Testimonios / Comentarios -->
-    <section id="testimonios" class="scroll-mt-24 py-12 md:py-24 px-4 md:px-8 max-w-6xl mx-auto">
+    <section id="testimonios" class="py-12 md:py-24 px-4 md:px-8 max-w-6xl mx-auto">
         <div class="text-center mb-10 md:mb-14">
             <p class="reveal text-gold-700 text-sm font-semibold mb-3">Testimonios</p>
             <h2 class="reveal text-2xl md:text-4xl font-bold text-maggie-900 font-serif mb-4">Qué dicen nuestras clientas</h2>
@@ -427,7 +427,7 @@
     </section>
 
     <!-- Preguntas Frecuentes -->
-    <section id="faq" class="scroll-mt-24 py-12 md:py-24 bg-maggie-100">
+    <section id="faq" class="py-12 md:py-24 bg-maggie-100">
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <div class="max-w-3xl mx-auto">
             <div class="text-center mb-8 md:mb-12">

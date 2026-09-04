@@ -182,103 +182,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // red de resguardo: cubren el caso de entrar al sitio con un ancla en la URL,
     // donde no hay click que interceptar.
 
-    const OFFSET_MOVIL = 100;       // = scroll-pt-[100px]
-    const OFFSET_ESCRITORIO = 120;  // = md:scroll-pt-[120px]
+    // const OFFSET_MOVIL = 76;       // = scroll-pt-[100px]
+    // const OFFSET_ESCRITORIO = 84;  // = md:scroll-pt-[120px]
 
-    const destinoDe = (id) => {
-        // "Inicio" es siempre el tope absoluto. La sección arranca pegada al nav,
-        // así que restarle el offset daría un número negativo y quedaría en 0 igual,
-        // pero dejarlo explícito evita depender de ese redondeo.
-        if (id === '#inicio') return 0;
-        const el = document.querySelector(id);
-        if (!el) return null;
-        const offset = window.innerWidth >= 768 ? OFFSET_ESCRITORIO : OFFSET_MOVIL;
-        return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - offset));
-    };
+    // const destinoDe = (id) => {
+    //     // "Inicio" es siempre el tope absoluto. La sección arranca pegada al nav,
+    //     // así que restarle el offset daría un número negativo y quedaría en 0 igual,
+    //     // pero dejarlo explícito evita depender de ese redondeo.
+    //     if (id === '#inicio') return 0;
+    //     const el = document.querySelector(id);
+    //     if (!el) return null;
+    //     const offset = window.innerWidth >= 768 ? OFFSET_ESCRITORIO : OFFSET_MOVIL;
+    //     return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - offset));
+    // };
 
     // Un solo selector cubre los tres casos: los links de escritorio, los del menú
     // móvil y el del logo, que también apunta a #inicio.
     document.querySelectorAll('.nav-shell a[href^="#"]').forEach((enlace) => {
-        enlace.addEventListener('click', (e) => {
-            const id = enlace.getAttribute('href');
-            const destinoEl = document.querySelector(id);
-            if (!destinoEl) return;        // ancla rota: que el navegador haga lo suyo
+        enlace.addEventListener('click', function(e) {
             e.preventDefault();
-
-            const target = destinoDe(id);
-            window.scrollTo({ top: target, behavior: 'smooth' });
-
-            // pushState y no location.hash: asignar el hash dispararía un segundo
-            // scroll nativo compitiendo con el que acabamos de lanzar.
+            const id = this.getAttribute('href');
+            const destino = document.querySelector(id);
+            if (!destino) return;
+            
+            // Ajustamos a la altura de tu menú (84px PC / 76px Celular)
+            // Si querés que frene más arriba (con más aire), subí estos números (ej: 100 y 90)
+            const offset = window.innerWidth >= 768 ? 84 : 76; 
+            
+            // Calculamos la posición exacta
+            const posicion = destino.getBoundingClientRect().top + window.scrollY - offset;
+            
+            // Vamos hacia allá suavemente (sin la función de "rebote" que daba error)
+            window.scrollTo({
+                top: posicion,
+                behavior: 'smooth'
+            });
+            
+            // Actualizamos la URL para que quede prolijo
             history.pushState(null, '', id);
-
-            // El foco tiene que seguir al scroll para quien navega con teclado o
-            // lector de pantalla. preventScroll evita que enfocar mueva la página.
-            if (!destinoEl.hasAttribute('tabindex')) destinoEl.setAttribute('tabindex', '-1');
-            destinoEl.focus({ preventScroll: true });
-
-            // --- Corrección final, una vez que el scroll se asentó ---
-            //
-            // OJO con el temporizador de respaldo: tiene que ser MÁS largo que la
-            // animación de scroll. Con 700ms saltaba en pleno viaje, veía que
-            // faltaban 260px para el destino, lo interpretaba como "el usuario tomó
-            // el control" y se saltaba la corrección. La sección terminaba
-            // aterrizando con hasta 20px de desvío.
-            let resuelto = false;
-            let temporizador = null;
-            const EVENTOS_USUARIO = ['wheel', 'touchstart', 'keydown'];
-
-            const limpiar = () => {
-                clearTimeout(temporizador);
-                window.removeEventListener('scrollend', asentar);
-                EVENTOS_USUARIO.forEach((ev) => window.removeEventListener(ev, cancelar));
-            };
-            const cancelar = () => { resuelto = true; limpiar(); };
-
-            function asentar() {
-                if (resuelto) return;
-                resuelto = true;
-                limpiar();
-                // El destino se recalcula en vez de reusar el de hace medio segundo:
-                // mientras duró la animación pueden haber terminado de cargar
-                // imágenes y la sección ya no está donde estaba.
-                const objetivo = destinoDe(id) ?? target;
-                // Solo corrige desvíos chicos. Si la distancia es grande, el usuario
-                // tomó el control y devolverlo al destino sería pelearle.
-                if (Math.abs(window.scrollY - objetivo) <= 150) {
-                    window.scrollTo({ top: objetivo, behavior: 'instant' });
-                }
-                // Recién ahora se recalcula el estado del nav, con el scroll quieto.
-                alScrollear();
-            }
-
-            // Vigila hasta que el scroll deje de moverse. Es el camino para los
-            // navegadores sin scrollend, y evita el problema del temporizador fijo:
-            // no adivina cuánto dura la animación, mira si todavía se está moviendo.
-            const vigilarQuietud = () => {
-                if (resuelto) return;
-                const y = window.scrollY;
-                quietos = Math.abs(y - ultimaY) < 1 ? quietos + 1 : 0;
-                ultimaY = y;
-                if (quietos >= 3) return asentar();
-                requestAnimationFrame(vigilarQuietud);
-            };
-            let ultimaY = window.scrollY, quietos = 0;
-
-            if (Math.abs(window.scrollY - target) < 2) {
-                // Ya estábamos en el destino: no va a haber scroll ni scrollend.
-                asentar();
-            } else {
-                if ('onscrollend' in window) {
-                    window.addEventListener('scrollend', asentar, { once: true });
-                } else {
-                    requestAnimationFrame(vigilarQuietud);
-                }
-                // Tope duro por si scrollend nunca llega. Holgado a propósito.
-                temporizador = setTimeout(asentar, 2500);
-                EVENTOS_USUARIO.forEach((ev) =>
-                    window.addEventListener(ev, cancelar, { once: true, passive: true }));
-            }
         });
     });
 

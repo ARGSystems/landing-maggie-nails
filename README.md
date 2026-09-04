@@ -309,6 +309,54 @@ Tres detalles del porqué:
 Resultado medido: el H1, los botones y la franja de confianza entran sin scroll en 375, 768,
 1440, 1512 y 1920 px, y el header no salta más de **16px** entre breakpoints.
 
+### Nav flotante al scrollear
+
+Arriba del todo el nav se ve sólido y a todo el ancho, igual que siempre. Pasados los 60px de
+scroll se convierte en una píldora flotante con vidrio esmerilado, y vuelve al estado sólido al
+subir. La transición dura 280ms e interpola ancho, radio, fondo, sombra y halo.
+
+**La estructura tuvo que cambiar para que esto fuera posible.** El `<nav>` está en el flujo del
+documento: si se le achica el ancho o se le tocan los márgenes directamente, se desplaza todo el
+contenido de abajo. Y `margin: auto`, que es lo que centraría la píldora, no se puede animar.
+
+Por eso se separaron responsabilidades:
+
+| | |
+|---|---|
+| `<nav class="nav-shell">` | Solo posicionamiento: `sticky`, `z-50`, y el desplazamiento vertical |
+| `<div class="nav-bar">` | Toda la capa visual: fondo, radio, sombra, blur y halo |
+
+Así el nav sigue ocupando el ancho completo en el flujo y la píldora se achica sin mover nada.
+
+**El desplazamiento vertical va con `transform`, no con `padding-top`.** El padding agrandaría
+la caja del nav y empujaría la página entera hacia abajo. `transform` es puramente visual.
+
+**El ancho se anima con `max-width` de `100%` a `64rem`,** que sí interpola (verificado cuadro
+a cuadro: 1440 → 1222 → 1112 → 1056 → 1024 px). Los márgenes laterales en pantallas chicas los da
+un `padding-inline` en el `.nav-shell`, que no afecta la altura.
+
+#### Dos cosas que aparecieron al medir
+
+**1. El halo generaba scroll horizontal.** El pseudo-elemento tenía `inset: -10px -8px` para
+extenderse más allá de la píldora. En el estado sólido, donde el nav ocupa todo el ancho, esos
+8px se salían del viewport y agregaban **8px de scroll horizontal** — invisible, porque el halo
+está en `opacity: 0`, pero real. Ahora arranca en `inset: 0` y se expande recién al flotar,
+que es cuando el nav ya tiene margen lateral.
+
+**2. El vidrio dejaba el texto por debajo de WCAG AA.** Con `rgba(42,15,66,.6)` el texto blanco
+del nav quedaba en **4,18:1** sobre las secciones claras del sitio, bajo el 4,5:1 que pide la
+norma. Lighthouse no lo detecta porque solo audita el estado inicial, con el nav sólido. Medido
+sobre la página real en siete posiciones de scroll, subir la opacidad a **`.72`** deja el peor
+caso en **5,63:1** y el vidrio se sigue viendo perfectamente.
+
+#### Verificación
+
+- Estado inicial: **0 píxeles de diferencia** contra la versión anterior en 390/768/1440px.
+- Las 7 anclas siguen aterrizando bien con el nav flotando: holgura de 12px en móvil y
+  escritorio, 4px en tablet (ajustado, pero la sección no queda tapada).
+- Sin scroll horizontal en ninguno de los dos estados.
+- El menú móvil abre, anima y cierra igual; al flotar acompaña el radio de la píldora.
+
 ### El nav pasa a íconos desde 1024px
 
 Los 7 links llevan un ícono SVG de 16px (20px en el menú móvil) con el mismo estilo de trazo que

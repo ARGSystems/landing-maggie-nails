@@ -135,6 +135,99 @@ html {
 .float-slow { animation: float 7s ease-in-out infinite; }
 .float-slower { animation: float 10s ease-in-out infinite; animation-delay: 1.2s; }
 
+/* --- NAV: barra sólida arriba, píldora flotante al scrollear ---
+   El <nav> conserva solo el posicionamiento; .nav-bar es la capa visual.
+   Separarlos importa: el nav está en el flujo del documento, así que achicarlo
+   a él directamente desplazaría todo el contenido de abajo. */
+
+.nav-shell {
+    padding-inline: 0;
+    /* El desplazamiento vertical va con transform y NO con padding-top: el
+       padding agrandaría la caja del nav y empujaría la página entera. */
+    transform: translateY(0);
+    transition: padding-inline .28s ease, transform .28s ease;
+}
+
+.nav-bar {
+    position: relative;          /* ancla al #menuMovil, que es absolute */
+    max-width: 100%;
+    margin-inline: auto;
+    border-radius: 0;
+    background-color: #4b1c71;   /* maggie-900: idéntico al estado actual */
+    /* Equivalente exacto de shadow-md, para que el estado inicial no cambie. */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+    transition: max-width .28s ease, border-radius .28s ease,
+                background-color .28s ease, box-shadow .28s ease;
+}
+
+/* Halo de color detrás de la píldora. Mismos tonos que .hero-gradient: dorado
+   y lavanda. z-index -1 lo deja debajo del fondo de .nav-bar pero dentro del
+   contexto de apilado del nav, así que sigue por encima de la página. */
+.nav-bar::before {
+    content: '';
+    position: absolute;
+    /* Arranca pegado al borde: en el estado sólido el nav ocupa todo el ancho,
+       y un inset negativo se saldría del viewport generando scroll horizontal
+       de 8px aunque el halo esté invisible. Se expande recién al flotar, que es
+       cuando el nav tiene margen lateral de sobra. */
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background:
+        radial-gradient(55% 130% at 20% 50%, rgba(201, 161, 90, .30), transparent 70%),
+        radial-gradient(55% 130% at 80% 50%, rgba(181, 126, 220, .32), transparent 70%);
+    filter: blur(18px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .28s ease, inset .28s ease;
+}
+
+/* --- Estado flotante (lo activa main.js pasados los 60px de scroll) --- */
+.nav-floating {
+    padding-inline: .75rem;
+    transform: translateY(.5rem);
+}
+@media (min-width: 1024px) {
+    .nav-floating { transform: translateY(1rem); }
+}
+
+.nav-floating .nav-bar {
+    max-width: 64rem;                          /* max-w-5xl */
+    border-radius: 1rem;
+    /* .72 y no .6: con .6 el texto blanco quedaba en 4.18:1 sobre las secciones
+       claras, por debajo del 4.5:1 que pide WCAG AA. Medido sobre la página real
+       en siete posiciones de scroll, .72 deja el peor caso en 5.63:1 y el vidrio
+       se sigue viendo perfectamente. */
+    background-color: rgba(42, 15, 66, .72);   /* --plum-deep translúcido */
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    box-shadow:
+        0 10px 30px -10px rgba(26, 11, 46, .55),
+        inset 0 0 0 1px rgba(255, 255, 255, .12);
+}
+
+.nav-floating .nav-bar::before {
+    inset: -10px -8px;
+    opacity: 1;
+}
+
+/* El menú móvil cuelga de la píldora: acompaña el radio y el vidrio, si no
+   queda un rectángulo opaco pegado a una barra redondeada. Más opaco que la
+   píldora para que los links se lean sobre cualquier fondo. */
+.nav-floating .menu-movil {
+    border-radius: 0 0 1rem 1rem;
+    border-top-color: rgba(255, 255, 255, .12);
+    background-color: rgba(42, 15, 66, .93);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+}
+
+/* Quien pidió menos movimiento en su sistema operativo recibe el cambio de
+   estado igual, pero sin la animación. */
+@media (prefers-reduced-motion: reduce) {
+    .nav-shell, .nav-bar, .nav-bar::before { transition: none; }
+}
+
 /* Efecto para que el menú de navegación se vea lindo al hacer hover */
 .nav-link {
     position: relative;

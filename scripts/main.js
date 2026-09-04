@@ -119,12 +119,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Botón "subir": aparece al bajar y vuelve arriba al tocarlo ---
+    // --- Estados que dependen del scroll ---
+    // Un solo listener para las dos cosas que reaccionan al scroll: el botón
+    // "subir" y el nav flotante. El evento se dispara decenas de veces por
+    // segundo, así que se agrupa con requestAnimationFrame: por más eventos que
+    // lleguen, los estilos se recalculan una vez por cuadro.
     const btnSubir = document.getElementById('btnSubir');
-    if (btnSubir) {
-        window.addEventListener('scroll', () => {
+    const navShell = document.querySelector('.nav-shell');
+    let cuadroPedido = false;
+
+    const alScrollear = () => {
+        const y = window.scrollY;
+
+        if (btnSubir) {
             // Si el usuario bajó más de 300 píxeles, mostramos el botón
-            if (window.scrollY > 300) {
+            if (y > 300) {
                 btnSubir.classList.remove('opacity-0', 'pointer-events-none');
                 btnSubir.classList.add('opacity-100');
             } else {
@@ -132,7 +141,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnSubir.classList.add('opacity-0', 'pointer-events-none');
                 btnSubir.classList.remove('opacity-100');
             }
-        });
+        }
+
+        // Sobre el hero el nav queda sólido y a todo lo ancho; al bajar se
+        // convierte en píldora flotante. El cambio visual lo hace el CSS.
+        if (navShell) navShell.classList.toggle('nav-floating', y > 60);
+
+        cuadroPedido = false;
+    };
+
+    window.addEventListener('scroll', () => {
+        if (!cuadroPedido) {
+            cuadroPedido = true;
+            requestAnimationFrame(alScrollear);
+        }
+    }, { passive: true });   // passive: le avisa al navegador que no vamos a
+                             // cancelar el evento, y no frena el scroll
+
+    // Estado inicial: la página puede cargar ya scrolleada, sea por un ancla en
+    // la URL o porque el navegador restauró la posición al volver atrás.
+    alScrollear();
+
+    if (btnSubir) {
         // El scroll sigue siendo suave porque lo define html { scroll-behavior: smooth }.
         btnSubir.addEventListener('click', () => window.scrollTo(0, 0));
     }

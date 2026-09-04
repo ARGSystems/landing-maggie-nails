@@ -328,6 +328,42 @@ logo, los paddings y los márgenes del hero. Las pantallas altas quedan exactame
 Sigue sin entrar en 1280x600, donde faltan 11px (antes faltaban 169). Es un alto de viewport muy
 poco frecuente en escritorio y el H1 y los botones se ven igual.
 
+#### La navegación por anclas se maneja en JavaScript
+
+Los enlaces del nav no usan el comportamiento nativo del navegador. `scripts/main.js`
+intercepta el click de todo `a[href^="#"]` dentro del nav — los 7 de escritorio, los 7 del
+menú móvil y el del logo — y hace el scroll a mano.
+
+**Por qué.** Con la navegación nativa, durante la animación de scroll el navegador puede
+reajustar la posición por su cuenta (*scroll anchoring*, cuando algo cambia de tamaño mientras
+viajás). La página llegaba al destino y después se corría 80-100px, dejando el nav en estado
+flotante estando arriba de todo. Manejándolo a mano, el destino se calcula, se hace **un solo**
+`scrollTo`, y al terminar se corrige la posición: el resultado no depende de lo que pase
+durante el viaje.
+
+Detalles que importan:
+
+- **`#inicio` va siempre a 0**, sin restarle offset. La sección arranca pegada al nav.
+- **La URL se actualiza con `history.pushState`, nunca asignando `location.hash`.** Asignar el
+  hash dispararía un segundo scroll nativo compitiendo con el que acabamos de lanzar.
+- **El foco se mueve al destino** con `tabindex="-1"` y `focus({preventScroll:true})`. La
+  navegación nativa ya hacía esto sola; al tomar el control había que reponerlo, si no quien
+  navega con teclado o lector de pantalla queda con el foco en el link del nav.
+- **El destino se recalcula al corregir**, no se reusa el de medio segundo antes: mientras duró
+  la animación pueden haber terminado de cargar imágenes.
+
+> ⚠️ **El temporizador de respaldo tiene que ser más largo que la animación.** La primera versión
+> usaba 700ms y saltaba en pleno viaje: veía que faltaban 260px, lo interpretaba como "el usuario
+> tomó el control" y se saltaba la corrección, dejando la sección con hasta 20px de desvío. Ahora
+> el camino principal es el evento `scrollend`, con un vigilante por `requestAnimationFrame`
+> para los navegadores que no lo soportan y un tope duro de 2,5s.
+
+Si el usuario mueve la rueda, toca la pantalla o usa el teclado durante la animación, la
+corrección se cancela: tomó el control y devolverlo al destino sería pelearle.
+
+**Verificación:** las 7 secciones × 6 destinos = 42 combinaciones, en 375, 768, 1512 y 1920px.
+Cada una aterriza exactamente en el offset, con **0px de corrimiento** después de frenar.
+
 #### El offset de las anclas
 
 El nav es fijo, así que al saltar a una sección hay que descontarlo o el título queda tapado.

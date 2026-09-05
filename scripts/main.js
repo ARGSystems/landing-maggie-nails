@@ -1,24 +1,73 @@
-// Todas las interacciones de Maggie Nails: carrusel, revelado al scroll, contadores
-// animados, lightbox, menú móvil, botón "subir" y el aviso del newsletter.
+// =============================================================================
+// Maggie Nails — interacciones de la página
+// =============================================================================
 //
-// No contiene lógica del sistema de reservas: los botones de turno son enlaces
-// directos a WhatsApp en index.html y no pasan por acá.
+// Un único archivo para todo lo que reacciona al usuario: carrusel de la
+// galería, revelado al hacer scroll, contadores animados, lightbox, estados que
+// dependen del scroll (botón "subir" y nav flotante), alternar claro y oscuro,
+// menú móvil y el aviso del newsletter.
 //
-// El menú móvil y el botón "subir" estaban en dos <script> inline dentro de
-// index.html. Se movieron acá porque la Content-Security-Policy declara
-// script-src 'self' y bloquea todo lo inline. El comportamiento es el mismo.
+// Por qué todo acá y nada inline en el HTML: la Content-Security-Policy del
+// sitio declara script-src 'self', que bloquea tanto los <script> inline como
+// los atributos onclick. El menú móvil y el botón "subir" vivían inline y se
+// movieron acá sin cambiarles el comportamiento.
+//
+// Qué NO está en este archivo:
+//   - La resolución inicial del tema, que corre antes del primer pintado y
+//     tiene su propio archivo bloqueante (scripts/tema.js).
+//   - Los turnos: los botones "Reservar" son enlaces directos a WhatsApp
+//     escritos en index.html y no pasan por JavaScript.
+//
+// El código está en español, igual que el resto del proyecto. Quedan en inglés
+// los nombres que vienen de afuera y no son nuestros: los IDs y las clases del
+// HTML, los data-* y el término "lightbox", que es el nombre del patrón de
+// interfaz y no una variable.
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Carrusel de la galería (Swiper) ---
-    // Se inicializa antes del binding del lightbox para que también
-    // capture los slides clonados que genera el modo loop.
+    // =========================================================================
+    // Utilidades compartidas
+    // =========================================================================
+
+    /**
+     * Ejecuta una acción la primera vez que cada elemento entra en pantalla y
+     * después deja de observarlo. Los dos efectos que la usan (revelado y
+     * contadores) son de una sola vez: no deben repetirse al volver a subir.
+     *
+     * @param {ArrayLike<Element>} elementos Elementos a vigilar.
+     * @param {IntersectionObserverInit} opciones Umbral y márgenes del observer.
+     * @param {(elemento: Element) => void} alEntrar Qué hacer con cada uno.
+     * @returns {boolean} false si no hay soporte o no hay nada que observar,
+     *   para que quien llama pueda aplicar un plan B.
+     */
+    const observarUnaVez = (elementos, opciones, alEntrar) => {
+        if (!('IntersectionObserver' in window) || !elementos.length) return false;
+
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (!entrada.isIntersecting) return;
+                observador.unobserve(entrada.target);
+                alEntrar(entrada.target);
+            });
+        }, opciones);
+
+        elementos.forEach((elemento) => observador.observe(elemento));
+        return true;
+    };
+
+    // =========================================================================
+    // Carrusel de la galería (Swiper)
+    // =========================================================================
+    // Se inicializa antes de enganchar el lightbox para que ese binding también
+    // alcance a los slides clonados que genera el modo loop.
+
     if (typeof Swiper !== 'undefined' && document.querySelector('.gallery-swiper')) {
         new Swiper('.gallery-swiper', {
             loop: true,
             autoplay: { delay: 3000, disableOnInteraction: false },
             centeredSlides: true,
-            // Touch/swipe siempre fluido, incluso si el usuario arranca el gesto sobre un botón o texto
+            // Touch/swipe siempre fluido, incluso si el usuario arranca el gesto
+            // sobre un botón o un texto.
             touchRatio: 1,
             followFinger: true,
             grabCursor: true,
@@ -33,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 prevEl: '.gallery-swiper .swiper-button-prev',
             },
             breakpoints: {
-                // Móvil: exactamente 1 imagen completa centrada
+                // Móvil: exactamente una imagen completa y centrada.
                 0: { slidesPerView: 1, spaceBetween: 16, centeredSlides: true },
                 640: { slidesPerView: 2, spaceBetween: 20, centeredSlides: false },
                 1024: { slidesPerView: 3, spaceBetween: 20, centeredSlides: false },
@@ -41,142 +90,245 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Revelado suave al hacer scroll ---
-    const revealEls = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window && revealEls.length) {
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    // =========================================================================
+    // Revelado suave al hacer scroll
+    // =========================================================================
+    // El desplazamiento y el fundido los define .reveal en el CSS. Acá solo se
+    // agrega .is-visible cuando el elemento aparece.
 
-        revealEls.forEach((el) => revealObserver.observe(el));
-    } else {
-        revealEls.forEach((el) => el.classList.add('is-visible'));
+    const elementosRevelables = document.querySelectorAll('.reveal');
+
+    const hayObservadorDeRevelado = observarUnaVez(
+        elementosRevelables,
+        // rootMargin -50px abajo: el elemento tiene que entrar un poco de
+        // verdad, no dispararse apenas asoma el primer píxel.
+        { threshold: 0.15, rootMargin: '0px 0px -50px 0px' },
+        (elemento) => elemento.classList.add('is-visible'),
+    );
+
+    // Sin IntersectionObserver se muestra todo de una: vale más ver la página
+    // completa sin animación que dejar media página sin aparecer nunca.
+    if (!hayObservadorDeRevelado) {
+        elementosRevelables.forEach((elemento) => elemento.classList.add('is-visible'));
     }
 
-    // --- Contadores animados (años, clientas, diseños...) ---
-    const counters = document.querySelectorAll('[data-counter]');
-    if ('IntersectionObserver' in window && counters.length) {
-        const countObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) return;
-                const el = entry.target;
-                const target = parseInt(el.dataset.counter, 10) || 0;
-                const duration = 1600;
-                const start = performance.now();
+    // =========================================================================
+    // Contadores animados (años, clientas, diseños...)
+    // =========================================================================
 
-                function step(now) {
-                    const progress = Math.min((now - start) / duration, 1);
-                    const eased = 1 - Math.pow(1 - progress, 3);
-                    el.textContent = Math.floor(eased * target).toLocaleString('es-AR');
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    } else {
-                        el.textContent = target.toLocaleString('es-AR');
-                    }
-                }
-                requestAnimationFrame(step);
-                countObserver.unobserve(el);
-            });
-        }, { threshold: 0.4 });
+    /**
+     * Anima un número desde 0 hasta el valor de su atributo data-counter.
+     *
+     * @param {HTMLElement} elemento Nodo con el atributo data-counter.
+     * @returns {void}
+     */
+    const animarContador = (elemento) => {
+        const objetivo = parseInt(elemento.dataset.counter, 10) || 0;
+        const duracion = 1600;
+        const inicio = performance.now();
 
-        counters.forEach((el) => countObserver.observe(el));
-    }
+        const paso = (ahora) => {
+            const avance = Math.min((ahora - inicio) / duracion, 1);
+            // Ease-out cúbica: arranca rápido y frena al final, que es como se
+            // lee natural un número subiendo.
+            const suavizado = 1 - Math.pow(1 - avance, 3);
+            elemento.textContent = Math.floor(suavizado * objetivo).toLocaleString('es-AR');
 
-    // --- Lightbox de la galería ---
+            if (avance < 1) {
+                requestAnimationFrame(paso);
+            } else {
+                // Último cuadro exacto: el Math.floor de arriba puede dejar 499
+                // cuando el objetivo era 500.
+                elemento.textContent = objetivo.toLocaleString('es-AR');
+            }
+        };
+
+        requestAnimationFrame(paso);
+    };
+
+    observarUnaVez(
+        document.querySelectorAll('[data-counter]'),
+        { threshold: 0.4 },
+        animarContador,
+    );
+
+    // =========================================================================
+    // Lightbox de la galería
+    // =========================================================================
+
     const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxClose = document.getElementById('lightboxClose');
-    const galleryImgs = document.querySelectorAll('[data-lightbox]');
+    const lightboxImagen = document.getElementById('lightboxImg');
+    const lightboxCerrar = document.getElementById('lightboxClose');
+    const imagenesGaleria = document.querySelectorAll('[data-lightbox]');
 
-    if (lightbox && lightboxImg && galleryImgs.length) {
-        const openLightbox = (img) => {
-            lightboxImg.src = img.src;
-            lightboxImg.alt = img.alt;
+    if (lightbox && lightboxImagen && imagenesGaleria.length) {
+        /**
+         * Abre el visor con la foto que se tocó.
+         *
+         * @param {HTMLImageElement} imagen Miniatura de la galería.
+         * @returns {void}
+         */
+        const abrirLightbox = (imagen) => {
+            lightboxImagen.src = imagen.src;
+            lightboxImagen.alt = imagen.alt;
             lightbox.classList.remove('hidden');
+            // Bloquea el scroll del fondo: sin esto la página se sigue moviendo
+            // detrás del visor.
             document.body.classList.add('overflow-hidden');
         };
-        const closeLightbox = () => {
+
+        /**
+         * Cierra el visor y le devuelve el scroll a la página.
+         *
+         * @returns {void}
+         */
+        const cerrarLightbox = () => {
             lightbox.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         };
 
-        galleryImgs.forEach((img) => {
-            img.addEventListener('click', () => openLightbox(img));
+        imagenesGaleria.forEach((imagen) => {
+            imagen.addEventListener('click', () => abrirLightbox(imagen));
         });
-        if (lightboxClose) {
-            lightboxClose.addEventListener('click', closeLightbox);
+
+        if (lightboxCerrar) {
+            lightboxCerrar.addEventListener('click', cerrarLightbox);
         }
+
+        // Solo el fondo cierra: si el click nació en la imagen, e.target es la
+        // imagen y no el contenedor.
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) closeLightbox();
+            if (e.target === lightbox) cerrarLightbox();
         });
+
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'Escape') cerrarLightbox();
         });
     }
 
-    // --- Estados que dependen del scroll ---
-    // Un solo listener para las dos cosas que reaccionan al scroll: el botón
-    // "subir" y el nav flotante. El evento se dispara decenas de veces por
-    // segundo, así que se agrupa con requestAnimationFrame: por más eventos que
-    // lleguen, los estilos se recalculan una vez por cuadro.
+    // =========================================================================
+    // Estados que dependen del scroll
+    // =========================================================================
+    // Dos cosas miran la posición del scroll: el botón "subir" y el nav. Se
+    // resuelven con UN solo listener agrupado con requestAnimationFrame. El
+    // evento se dispara decenas de veces por segundo, así que de esta forma los
+    // estilos se recalculan una vez por cuadro y no una vez por evento.
+
     const btnSubir = document.getElementById('btnSubir');
     const navShell = document.querySelector('.nav-shell');
+
+    /**
+     * Muestra el botón "subir" solo cuando ya se bajó lo suficiente como para
+     * que volver arriba sea un viaje.
+     *
+     * @param {number} y Posición vertical del scroll, en píxeles.
+     * @returns {void}
+     */
+    const actualizarBotonSubir = (y) => {
+        if (!btnSubir) return;
+        // Ojo con los nombres acá adentro: el escaner de Tailwind lee este
+        // archivo como texto plano, sin entender que es JavaScript, y cualquier
+        // palabra que coincida con una utilidad suya termina generando una regla
+        // CSS que nadie usa. Por eso la variable no se llama como la utilidad de
+        // visibilidad de Tailwind.
+        const seVe = y > 300;
+        btnSubir.classList.toggle('opacity-0', !seVe);
+        btnSubir.classList.toggle('pointer-events-none', !seVe);
+        btnSubir.classList.toggle('opacity-100', seVe);
+    };
+
+    /**
+     * Sobre el hero el nav queda sólido y a todo lo ancho; al bajar se convierte
+     * en píldora flotante. Acá solo se prende la clase: el cambio visual y su
+     * transición los define .nav-floating en el CSS.
+     *
+     * @param {number} y Posición vertical del scroll, en píxeles.
+     * @returns {void}
+     */
+    const actualizarNav = (y) => {
+        if (navShell) navShell.classList.toggle('nav-floating', y > 60);
+    };
+
     let cuadroPedido = false;
 
+    /**
+     * Recalcula de una sola vez todo lo que depende del scroll. La llama el
+     * requestAnimationFrame, no el listener directamente.
+     *
+     * @returns {void}
+     */
     const alScrollear = () => {
         const y = window.scrollY;
-
-        if (btnSubir) {
-            // Si el usuario bajó más de 300 píxeles, mostramos el botón
-            if (y > 300) {
-                btnSubir.classList.remove('opacity-0', 'pointer-events-none');
-                btnSubir.classList.add('opacity-100');
-            } else {
-                // Si está arriba, lo ocultamos
-                btnSubir.classList.add('opacity-0', 'pointer-events-none');
-                btnSubir.classList.remove('opacity-100');
-            }
-        }
-
-        // Sobre el hero el nav queda sólido y a todo lo ancho; al bajar se
-        // convierte en píldora flotante. El cambio visual lo hace el CSS.
-        if (navShell) navShell.classList.toggle('nav-floating', y > 60);
-
+        actualizarBotonSubir(y);
+        actualizarNav(y);
         cuadroPedido = false;
     };
 
     window.addEventListener('scroll', () => {
-        if (!cuadroPedido) {
-            cuadroPedido = true;
-            requestAnimationFrame(alScrollear);
-        }
+        if (cuadroPedido) return;
+        cuadroPedido = true;
+        requestAnimationFrame(alScrollear);
     }, { passive: true });   // passive: le avisa al navegador que no vamos a
-                             // cancelar el evento, y no frena el scroll
+                             // cancelar el evento, y así no frena el scroll.
 
     // Estado inicial: la página puede cargar ya scrolleada, sea por un ancla en
     // la URL o porque el navegador restauró la posición al volver atrás.
     alScrollear();
 
     if (btnSubir) {
-        // El scroll sigue siendo suave porque lo define html { scroll-behavior: smooth }.
+        // El scroll sigue siendo suave porque lo define la clase scroll-smooth
+        // del <html>, no este scrollTo.
         btnSubir.addEventListener('click', () => window.scrollTo(0, 0));
     }
 
-    // --- Alternar claro / oscuro ---
-    // La resolucion inicial ya la hizo scripts/tema.js en el <head>. Aca solo
-    // se maneja el click y se mantiene sincronizada la etiqueta del boton.
-    const btnTema = document.getElementById('btnTema');
-    const GUARDADO_TEMA = 'maggie-tema';
+    // =========================================================================
+    // Alternar claro / oscuro
+    // =========================================================================
+    // La resolución inicial ya la hizo scripts/tema.js en el <head>. Acá solo se
+    // maneja el click y se mantiene sincronizada la etiqueta del botón.
 
+    const btnTema = document.getElementById('btnTema');
+    const CLAVE_TEMA = 'maggie-tema';   // misma clave que usa scripts/tema.js
+
+    /**
+     * Lee el tema guardado sin romperse si el navegador no deja.
+     *
+     * @returns {string|null} 'oscuro', 'claro', o null si nunca se eligió a mano.
+     */
+    const leerTemaGuardado = () => {
+        // localStorage no solo puede devolver null: puede LANZAR excepción en
+        // navegación privada o con las cookies de sitio bloqueadas.
+        try {
+            return localStorage.getItem(CLAVE_TEMA);
+        } catch (e) {
+            return null;
+        }
+    };
+
+    /**
+     * Guarda la elección del usuario. Si el navegador no deja escribir, el tema
+     * igual funciona en esta sesión: solo no se recuerda al recargar.
+     *
+     * @param {boolean} oscuro true si quedó activo el modo oscuro.
+     * @returns {void}
+     */
+    const guardarTema = (oscuro) => {
+        try {
+            localStorage.setItem(CLAVE_TEMA, oscuro ? 'oscuro' : 'claro');
+        } catch (e) {
+            /* sin persistencia, pero el sitio sigue andando igual */
+        }
+    };
+
+    /**
+     * Pone en el botón la etiqueta que lee un lector de pantalla. Describe la
+     * ACCIÓN y no el estado, porque un <button> con solo un ícono adentro no
+     * dice nada por sí mismo.
+     *
+     * @returns {void}
+     */
     const sincronizarBotonTema = () => {
         const oscuro = document.documentElement.classList.contains('dark');
-        // Un <button> con solo un icono adentro no dice nada a un lector de
-        // pantalla. La etiqueta describe la ACCION, no el estado actual.
         btnTema.setAttribute('aria-label', oscuro ? 'Activar modo claro' : 'Activar modo oscuro');
     };
 
@@ -185,96 +337,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btnTema.addEventListener('click', () => {
             const oscuro = document.documentElement.classList.toggle('dark');
-            try {
-                localStorage.setItem(GUARDADO_TEMA, oscuro ? 'oscuro' : 'claro');
-            } catch (e) {
-                // Navegacion privada o cookies bloqueadas: el tema funciona
-                // igual en esta sesion, solo no se recuerda al recargar.
-            }
+            guardarTema(oscuro);
             sincronizarBotonTema();
         });
 
-        // Si el usuario nunca eligio a mano, seguir los cambios del sistema
-        // (por ejemplo el modo oscuro automatico al anochecer).
+        // Si el usuario nunca eligió a mano, seguir los cambios del sistema (por
+        // ejemplo el modo oscuro automático al anochecer). Si eligió, su
+        // decisión manda y el sistema se ignora.
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            let eligio = null;
-            try { eligio = localStorage.getItem(GUARDADO_TEMA); } catch (err) {}
-            if (eligio) return;   // eligio explicitamente: su decision manda
+            if (leerTemaGuardado()) return;
             document.documentElement.classList.toggle('dark', e.matches);
             sincronizarBotonTema();
         });
     }
 
-    // --- Navegación por anclas del nav, manejada a mano ---
-    //
-    // Antes esto dependía del comportamiento nativo: scroll-behavior: smooth más
-    // scroll-padding-top en <html>. El problema es que durante esa animación el
-    // navegador puede reajustar la posición por su cuenta (scroll anchoring), y la
-    // página termina asentándose unos píxeles más allá del destino, con el nav
-    // quedando en estado flotante estando arriba de todo.
-    //
-    // Acá el destino se calcula UNA vez, se hace un solo scroll y se corrige al
-    // final. Así el resultado no depende de lo que pase durante el viaje.
-    //
-    // Las clases scroll-pt-[100px] md:scroll-pt-[120px] del <html> se dejan como
-    // red de resguardo: cubren el caso de entrar al sitio con un ancla en la URL,
-    // donde no hay click que interceptar.
+    // =========================================================================
+    // Menú desplegable móvil
+    // =========================================================================
+    // La navegación por anclas la resuelve el navegador solo: los links son <a>
+    // con href="#seccion", el scroll suave sale de scroll-smooth y la parada
+    // correcta de scroll-pt-[76px] md:scroll-pt-[84px], las tres clases puestas
+    // en el <html>. Acá no hay ningún manejador de click que la intercepte.
 
-     const OFFSET_MOVIL = 76;       // = scroll-pt-[100px]
-     const OFFSET_ESCRITORIO = 84;  // = md:scroll-pt-[120px]
-
-     const destinoDe = (id) => {
-         // "Inicio" es siempre el tope absoluto. La sección arranca pegada al nav,
-         // así que restarle el offset daría un número negativo y quedaría en 0 igual,
-         // pero dejarlo explícito evita depender de ese redondeo.
-         if (id === '#inicio') return 0;
-         const el = document.querySelector(id);
-         if (!el) return null;
-         const offset = window.innerWidth >= 768 ? OFFSET_ESCRITORIO : OFFSET_MOVIL;
-         return Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - offset));
-     };
-
-    // Un solo selector cubre los tres casos: los links de escritorio, los del menú
-    // móvil y el del logo, que también apunta a #inicio.
-    // document.querySelectorAll('.nav-shell a[href^="#"]').forEach((enlace) => {
-    //     enlace.addEventListener('click', function(e) {
-    //         e.preventDefault();
-    //         const id = this.getAttribute('href');
-    //         const destino = document.querySelector(id);
-    //         if (!destino) return;
-            
-    //         // Ajustamos a la altura de tu menú (84px PC / 76px Celular)
-    //         // Si querés que frene más arriba (con más aire), subí estos números (ej: 100 y 90)
-    //         const offset = window.innerWidth >= 768 ? 120 : 100; 
-            
-    //         // Calculamos la posición exacta
-    //         const posicion = destino.getBoundingClientRect().top + window.scrollY - offset;
-            
-    //         // Vamos hacia allá suavemente (sin la función de "rebote" que daba error)
-    //         window.scrollTo({
-    //             top: posicion,
-    //             behavior: 'smooth'
-    //         });
-            
-    //         // Actualizamos la URL para que quede prolijo
-    //         history.pushState(null, '', id);
-    //     });
-    // });
-
-    // --- Menú desplegable móvil ---
     const btnMenu = document.getElementById('btnMenu');
     const menuMovil = document.getElementById('menuMovil');
     const opcionesMenu = document.querySelectorAll('.menu-item');
 
     if (btnMenu && menuMovil) {
-        // Abre y cierra el menú al tocar la hamburguesa (con animación suave vía CSS)
+        // Abre y cierra el menú al tocar la hamburguesa. La animación es del CSS
+        // (.menu-movil / .menu-open); acá solo se prende la clase y se mantiene
+        // aria-expanded al día para los lectores de pantalla.
         btnMenu.addEventListener('click', () => {
             const abierto = menuMovil.classList.toggle('menu-open');
             btnMenu.setAttribute('aria-expanded', abierto);
         });
 
-        // Cierra el menú automáticamente cuando el usuario elige una opción
-        opcionesMenu.forEach(opcion => {
+        // Se cierra solo cuando el usuario elige una opción: si no, el menú
+        // taparía justo la sección a la que acaba de saltar.
+        opcionesMenu.forEach((opcion) => {
             opcion.addEventListener('click', () => {
                 menuMovil.classList.remove('menu-open');
                 btnMenu.setAttribute('aria-expanded', 'false');
@@ -282,12 +382,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Newsletter: no hay backend detrás, así que se dice ---
+    // =========================================================================
+    // Newsletter: no hay backend detrás, así que se dice
+    // =========================================================================
     // El formulario quedó en el diseño del footer, pero no manda el correo a
-    // ningún lado. En vez de tragarse el envío en silencio, muestra un aviso
-    // que aclara que no se guardó nada.
+    // ningún lado. En vez de tragarse el envío en silencio, se reemplaza por un
+    // aviso que aclara que no se guardó nada.
+
     const formNewsletter = document.getElementById('formNewsletter');
     const avisoNewsletter = document.getElementById('avisoNewsletter');
+
     if (formNewsletter && avisoNewsletter) {
         formNewsletter.addEventListener('submit', (e) => {
             e.preventDefault();

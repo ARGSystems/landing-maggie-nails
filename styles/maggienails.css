@@ -1,15 +1,30 @@
-/* style.css */
+/* =============================================================================
+   Maggie Nails — estilos propios
+   =============================================================================
 
-/* Comportamiento para que el scroll del menú sea suave */
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 100px;
-}
-@media (min-width: 768px) {
-    html {
-        scroll-padding-top: 120px;
-    }
-}
+   Todo lo que Tailwind no cubre: decoraciones con las imágenes de la marca,
+   el nav flotante, las animaciones de entrada y de revelado, el lightbox, el
+   footer, los overrides de Swiper y los ajustes del modo oscuro.
+
+   Relación con los otros dos CSS:
+     - styles/tailwind.css es GENERADO (npm run build:css). Nunca se edita a
+       mano. Se carga DESPUÉS de este archivo, así que sus utilidades pisan lo
+       que hay acá: para ganarle hay que subir la especificidad, no reordenar.
+     - styles/fuentes.css solo declara los @font-face self-hosteados.
+
+   Convenciones del archivo:
+     - Los nombres de clases propias van en español (.menu-movil, .nav-bar).
+       Quedan en inglés los que vienen de librerías (.swiper-*) o del patrón
+       (.reveal, .card-hover), y las clases que prende el JavaScript.
+     - Los valores "raros" (un padding puntual, un max-width justo) llevan al
+       lado el motivo por el que son ese número y no otro. Casi todos salen de
+       medir la página real en el navegador, no de estimarlos.
+
+   El scroll suave y la parada de las anclas NO se declaran acá: salen de las
+   clases scroll-smooth scroll-pt-[76px] md:scroll-pt-[84px] del <html>, que le
+   ganan a cualquier regla html{} de este archivo por especificidad (una clase
+   pesa más que un elemento). Un scroll-padding-top escrito acá sería código
+   muerto y engañoso. */
 
 :root {
     --gold: #c9a15a;
@@ -134,40 +149,34 @@ html {
     }
 }
 
-/* Manchas decorativas (Polish) para poner en las esquinas */
+/* Manchas decorativas (los frascos de esmalte de la marca) en las esquinas.
+   Se posicionan contra la sección, que tiene position: relative. */
 .decoracion-mancha {
     position: absolute;
     z-index: 0;
-    opacity: 0.15; /* Sutil para no tapar el texto */
-    pointer-events: none; /* Para que no interfiera con los clics */
+    opacity: 0.15;          /* sutil: es fondo, no debe competir con el texto */
+    pointer-events: none;   /* si no, se come los clics de lo que tiene encima */
 }
 
+/* -50px la saca media mancha fuera del borde, que es lo que hace que se lea
+   como una decoración recortada y no como una imagen centrada. La sección
+   recorta el excedente con overflow-hidden. */
 .mancha-top-right {
     top: -50px;
     right: -50px;
     width: 250px;
+    height: 250px;
     background-image: url('../assets/polish1.webp');
     background-size: contain;
     background-repeat: no-repeat;
-    height: 250px;
 }
 
-.mancha-bottom-left {
-    bottom: -50px;
-    left: -50px;
-    width: 250px;
-    background-image: url('../assets/polish2.webp');
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 250px;
-}
-
+/* Flotación lenta de las decoraciones. */
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-18px) rotate(4deg); }
 }
 .float-slow { animation: float 7s ease-in-out infinite; }
-.float-slower { animation: float 10s ease-in-out infinite; animation-delay: 1.2s; }
 
 /* --- NAV: barra sólida arriba, píldora flotante al scrollear ---
    El <nav> conserva solo el posicionamiento; .nav-bar es la capa visual.
@@ -256,13 +265,10 @@ html {
     backdrop-filter: blur(16px);
 }
 
-/* Quien pidió menos movimiento en su sistema operativo recibe el cambio de
-   estado igual, pero sin la animación. */
-@media (prefers-reduced-motion: reduce) {
-    .nav-shell, .nav-bar, .nav-bar::before { transition: none; }
-}
+/* El bloque de prefers-reduced-motion que apaga estas transiciones está
+   agrupado con los demás al final del archivo. */
 
-/* Efecto para que el menú de navegación se vea lindo al hacer hover */
+/* Subrayado dorado que crece de izquierda a derecha al apuntar un link. */
 .nav-link {
     position: relative;
     transition: color 0.3s ease;
@@ -304,14 +310,13 @@ html {
     opacity: 1;
     transform: translateY(0);
 }
+/* Escalonado para que los elementos de una misma fila no aparezcan todos
+   juntos. El paso de .12s es el mismo que usan las tarjetas de servicios. */
 .reveal-delay-1 { transition-delay: .12s; }
 .reveal-delay-2 { transition-delay: .24s; }
 .reveal-delay-3 { transition-delay: .36s; }
-.reveal-delay-4 { transition-delay: .48s; }
 
 /* --- ACENTOS DORADOS --- */
-.text-gold { color: var(--gold); }
-.border-gold { border-color: var(--gold); }
 .divider-gold {
     width: 64px;
     height: 3px;
@@ -329,9 +334,15 @@ html {
     box-shadow: 0 20px 40px -12px rgba(75, 28, 113, 0.35);
 }
 
+/* Cintita "MÁS ELEGIDO" de la tarjeta de servicio destacada. */
 .badge-popular {
     position: absolute;
+    /* Aproximadamente la mitad del alto de la cintita (0.35rem de padding
+       arriba y abajo más la línea de texto): así queda montada a caballo sobre
+       el borde de la tarjeta en vez de colgando por fuera. */
     top: -14px;
+    /* left + translateX es lo que la centra sin depender del ancho, que cambia
+       con la longitud del texto. */
     left: 50%;
     transform: translateX(-50%);
     background: linear-gradient(90deg, var(--gold), var(--gold-light));
@@ -405,16 +416,25 @@ html {
     text-shadow: 0 0 10px rgba(201, 161, 90, 0.6);
 }
 
-/* --- MENÚ MÓVIL: animación suave de apertura/cierre --- */
+/* --- MENÚ MÓVIL: animación suave de apertura/cierre ---
+   Se anima max-height y no height porque height: auto no es interpolable: el
+   navegador no sabe a qué número tiene que llegar y el despliegue sale seco.
+   pointer-events: none es imprescindible: con max-height: 0 el menú es
+   invisible pero sus links siguen ahí, y se pueden tocar sin querer. */
 .menu-movil {
     max-height: 0;
     opacity: 0;
-    overflow: hidden;
+    overflow: hidden;   /* convierte el achique en recorte visual */
     pointer-events: none;
     transform: translateY(-8px);
     transition: max-height .35s cubic-bezier(.16,.84,.44,1), opacity .25s ease, transform .3s ease;
 }
 .menu-movil.menu-open {
+    /* Tiene que SUPERAR el alto real del menú, que hoy es 380px con siete
+       opciones; si quedara corto, el menú se cortaría. Los 512px dejan lugar
+       para agregar un par de opciones más sin volver a tocar este número.
+       Ojo con exagerarlo: la transición dura lo mismo igual, así que un valor
+       enorme haría que la primera mitad de la animación no se vea. */
     max-height: 32rem;
     opacity: 1;
     pointer-events: auto;
@@ -425,9 +445,12 @@ html {
 .footer-link {
     color: #dbb6ee; /* maggie-300 */
     position: relative;
+    /* inline-block + fit-content: el área clicable termina donde termina el
+       texto. Con display: block ocuparía toda la columna y en el celular se
+       tocaría el link de al lado sin querer. */
     display: inline-block;
     width: fit-content;
-    padding: 0.4rem 0;
+    padding: 0.4rem 0;   /* separa los links y agranda el área táctil */
     transition: color .3s ease, transform .3s ease;
 }
 .footer-link:hover {
@@ -462,13 +485,14 @@ html {
     transform: translateY(-3px);
 }
 
-/* --- CARRUSEL DE GALERÍA (Swiper) --- */
-.gallery-swiper {
-    padding-left: 4px;
-    padding-right: 4px;
-}
+/* --- CARRUSEL DE GALERÍA (Swiper) ---
+   Overrides del tema por defecto de Swiper. Todos van anidados bajo
+   .gallery-swiper para no pisar otro carrusel si algún día se agrega. */
 .gallery-swiper .swiper-button-next,
 .gallery-swiper .swiper-button-prev {
+    /* 44x44 es el mínimo recomendado para un objetivo táctil (WCAG 2.5.5 y las
+       guías de Apple). El ícono adentro es mucho más chico, pero el área que
+       responde al dedo tiene que ser esta. */
     width: 44px;
     height: 44px;
     background: #ffffff;
@@ -586,13 +610,32 @@ body, section, header, .bg-pattern, details.faq-item {
     margin-left: 0;
 }
 
-/* Quien pidio menos movimiento recibe el texto igual, pero sin el deslizamiento. */
+/* ===========================================================
+   MOVIMIENTO REDUCIDO
+   ===========================================================
+
+   Estaban repartidos en tres bloques a lo largo del archivo; se juntaron acá
+   para poder leer de una sola vez qué se apaga.
+
+   El criterio es apagar la ANIMACIÓN, no el efecto: quien pidió menos
+   movimiento en su sistema operativo ve el nav flotante, el texto del nav y el
+   cambio de tema exactamente igual, solo que el cambio ocurre de una vez en
+   lugar de deslizarse. */
 @media (prefers-reduced-motion: reduce) {
+    /* Nav: la píldora flotante y su halo. */
+    .nav-shell,
+    .nav-bar,
+    .nav-bar::before { transition: none; }
+
+    /* Nav: el texto que se colapsa y se vuelve a desplegar al apuntarlo. */
+    .nav-text,
     .nav-floating .nav-link:hover .nav-text,
     .nav-floating .nav-link:focus-visible .nav-text { transition: none; }
-}
 
-@media (prefers-reduced-motion: reduce) {
-    .nav-text { transition: none; }
-    body, section, header, .bg-pattern, details.faq-item { transition: none; }
+    /* Cambio de tema claro/oscuro. */
+    body,
+    section,
+    header,
+    .bg-pattern,
+    details.faq-item { transition: none; }
 }

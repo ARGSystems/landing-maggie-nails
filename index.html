@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- =====================================================================
+         Maggie Nails — landing de una sola página
+         =====================================================================
+
+         Pieza de portfolio de Ariel Roldán Guevara (ARG Systems). HTML, Tailwind
+         y JavaScript sin framework; no hay backend ni base de datos.
+
+         Orden de las secciones, el mismo que el del nav:
+           #inicio -> #sobre-nosotros -> #beneficios -> #servicios
+                   -> #galeria -> #testimonios -> #faq -> footer
+
+         Los estilos salen de tres hojas y el ORDEN en que se cargan importa
+         (ver el comentario del <link> de tailwind.css, más abajo).
+         El comportamiento vive en scripts/tema.js (bloqueante, en este <head>)
+         y scripts/main.js (al final del <body>).
+
+         Los botones Reservar son enlaces directos a WhatsApp: no pasan por
+         JavaScript ni por ningún formulario.
+         ===================================================================== -->
+
     <!-- Bloqueante y lo mas arriba posible: define el tema antes del primer
          pintado. Si esto corriera en main.js (al final del body) se veria un
          destello claro antes de pasar a oscuro. -->
@@ -64,7 +84,7 @@
          Va ULTIMO a proposito: el Play CDN inyectaba su <style> al final del <head>,
          asi que sus utilidades pisaban a maggienails.css y a Swiper. Mover este
          <link> hacia arriba invertiria esa prioridad y romperia el diseno.
-         Se regenera con: npm run build  (fuente: styles/tailwind.src.css) -->
+         Se regenera con: npm run build:css  (fuente: styles/tailwind.src.css) -->
     <link rel="stylesheet" href="styles/tailwind.css">
 
     <!-- El fondo del hero es el elemento LCP. Al venir de CSS, el navegador recien lo
@@ -191,7 +211,7 @@
         </div>
     </header>
 
-    
+
     <!-- Sobre Nosotros -->
     <section id="sobre-nosotros" class="py-12 md:py-10 bg-maggie-100 dark:bg-[#120726] relative overflow-hidden">
         <div class="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
@@ -386,7 +406,8 @@
             <div class="reveal card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
-                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <!-- Avatar: la inicial dentro de un círculo. No hay foto de la clienta, y
+                         una genérica de banco de imágenes sería peor que no tener ninguna. -->
                     <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -407,7 +428,8 @@
             <div class="reveal reveal-delay-1 card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
-                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <!-- Avatar: la inicial dentro de un círculo. No hay foto de la clienta, y
+                         una genérica de banco de imágenes sería peor que no tener ninguna. -->
                     <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -428,7 +450,8 @@
             <div class="reveal reveal-delay-2 card-hover bg-maggie-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
                 <span class="absolute -top-3 left-2 text-6xl text-white/10 font-serif select-none">"</span>
                 <div class="relative flex items-center gap-4 mb-4">
-                    <!-- AVATAR CON ÍCONO (Reemplaza a la imagen) -->
+                    <!-- Avatar: la inicial dentro de un círculo. No hay foto de la clienta, y
+                         una genérica de banco de imágenes sería peor que no tener ninguna. -->
                     <div class="w-14 h-14 rounded-full bg-maggie-300 text-maggie-900 dark:text-maggie-300 flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -513,7 +536,7 @@
         </div>
     </section>
 
- <!-- FOOTER MEJORADO -->
+    <!-- Footer: marca, navegación, contacto, newsletter y créditos -->
 <footer class="bg-gradient-to-b from-maggie-900 to-[#1a0b2e] text-maggie-100 pt-12 md:pt-20 pb-8 relative overflow-hidden">
     <div class="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
 
@@ -562,7 +585,7 @@
                         <span class="text-sm font-medium">@maggie____nails</span>
                     </a>
 
-                    <!-- WhatsApp (Acá pones el número) -->
+                    <!-- WhatsApp: el mismo número que los botones Reservar de Servicios -->
                     <a href="https://wa.me/5493874507981" target="_blank" rel="noopener noreferrer" class="footer-social">
                         <span class="footer-social-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

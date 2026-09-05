@@ -1,10 +1,33 @@
 # 💅 Maggie Nails — Landing Page
 
-Landing page oficial de **Maggie Nails**, nail studio en Salta, Argentina. Sitio de una sola página (single-page), 100% estático, pensado para presentar la marca, mostrar el trabajo del estudio y llevar clientas directo a reservar turno por WhatsApp.
+Landing de una sola página para **Maggie Nails**, un nail studio de Salta, Argentina.
+100% estática, mobile-first, sin framework ni backend: presenta la marca, muestra el
+trabajo del estudio y lleva a reservar turno por WhatsApp.
 
-**Desarrollado por [ARG Systems](https://github.com/Moksys1)**
+**Desarrollada por [ARG Systems](https://github.com/ARGSystems)** — Ariel Roldán Guevara.
 
 🔗 Demo en vivo: **https://maggienails.netlify.app**
+
+---
+
+## 🎯 Sobre este proyecto
+
+Esta landing es una **pieza de portfolio**. Nació como el sitio real de un nail studio y
+hoy se mantiene como muestra de trabajo: el diseño, los textos y los precios se conservan
+tal como estaban, pero **los canales de contacto son los del desarrollador**, no los de un
+negocio en actividad.
+
+Concretamente, eso significa:
+
+- Los botones **"Reservar"** abren un chat de WhatsApp con **mi** número, no con el del estudio.
+- El **formulario de newsletter no manda nada**: no hay backend. Al enviarlo, la página lo
+  dice en pantalla en vez de simular que guardó el correo.
+- **No hay analytics, pixeles de tracking ni JSON-LD de negocio local.** Fue una decisión
+  explícita, no un olvido: se explica en *SEO técnico*, más abajo.
+
+El foco del repo está puesto en lo que no se ve en la captura de pantalla: el build real de
+Tailwind, las imágenes optimizadas, los headers de seguridad, la accesibilidad y el hecho de
+que **cada decisión no obvia está comentada en el código y justificada acá**.
 
 ---
 
@@ -28,7 +51,8 @@ Sitio estático servido tal cual, con un único paso de build local para compila
 | HTML5 | Estructura de la página (`index.html`) |
 | [Tailwind CSS](https://tailwindcss.com/) 3.4.19 (compilado con la CLI) | Utilidades de estilo + tema custom definido en `tailwind.config.js` |
 | CSS propio | `styles/maggienails.css` — estilos y animaciones que no cubre Tailwind |
-| JavaScript vainilla | `scripts/main.js` — interacciones (reveal, contadores, lightbox) |
+| JavaScript vainilla | `scripts/main.js` — interacciones (reveal, contadores, lightbox, tema, menú) |
+| JavaScript vainilla | `scripts/tema.js` — resuelve claro/oscuro antes del primer pintado |
 | [Swiper.js](https://swiperjs.com/) (vía CDN) | Carrusel de la galería |
 | [sharp](https://sharp.pixelplumbing.com/) | Optimización de imágenes a WebP (solo en desarrollo) |
 | Google Fonts | Inter, Playfair Display, Cormorant Garamond |
@@ -53,9 +77,10 @@ LANDING MAGGIE NAILS/
 │   ├── fuentes.css            # @font-face de las tipografías (generado)
 │   └── maggienails.css        # Estilos propios: animaciones, lightbox, footer, Swiper
 ├── scripts/
+│   ├── tema.js                # Resuelve claro/oscuro ANTES del primer pintado (bloqueante)
 │   └── main.js                # Todas las interacciones: carrusel, reveal, contadores,
-│                              # lightbox, menú móvil, botón subir y newsletter
-├── assets/                    # SOLO lo que el sitio sirve (8 archivos WebP/PNG)
+│                              # lightbox, menú móvil, botón subir, tema y newsletter
+├── assets/                    # SOLO lo que el sitio sirve (11 archivos WebP/PNG)
 ├── marca/                     # Archivos originales de diseño (ver marca/README.md)
 ├── images/                    # Fotos de la galería: PNG originales + WebP generados
 └── .gitignore
@@ -106,6 +131,21 @@ npx serve .
 > recompilar (`npm run build:css`) **antes de commitear**. Si no, el CSS versionado queda
 > desactualizado y la clase nueva no va a existir en producción. Tener `npm run dev:css`
 > corriendo mientras editás evita el olvido.
+
+### Convenciones de código
+
+- **Los nombres propios van en español** (`.menu-movil`, `actualizarNav`, `btnSubir`).
+  Quedan en inglés los que vienen de afuera y no son nuestros: las clases de Tailwind y de
+  Swiper, los IDs del HTML, los `data-*` y los términos del patrón (`reveal`, `lightbox`).
+- **Los valores "raros" llevan al lado el motivo.** Casi todos salen de medir la página real
+  en el navegador, no de estimarlos: el `--nav-alto` del hero, el `max-width` del texto del
+  nav, el `0.72` de opacidad del vidrio. El número sin la explicación es una trampa para el
+  que venga después.
+- **Cada archivo abre con un comentario de cabecera** que dice qué hace, qué NO hace y por
+  qué está separado del resto.
+- **Ojo con lo que se escribe en `scripts/*.js`:** Tailwind escanea esos archivos como texto
+  plano, comentarios incluidos. Una palabra suelta que coincida con una utilidad suya alcanza
+  para que aparezca una regla CSS que nadie usa.
 
 ### Por qué el CSS se compila y ya no viene de un CDN
 
@@ -571,11 +611,19 @@ fases cerraron con **0 píxeles de diferencia**.
 
 Cosas detectadas y **no** corregidas, porque implican decisiones de diseño o de contenido:
 
-### Otros
+### Archivos que se publican y nadie descarga
 
-- **`fonts/` pesa 1,2 MB en 26 archivos y el navegador solo descarga 7** (289 KB). Los otros
-  son pesos que el diseño no usa hoy. Se pueden podar, con el riesgo de que si mañana se usa
-  uno el navegador falsifique la variante y se vea peor.
+Ninguno afecta a la visitante: el navegador solo baja lo que la página referencia. Pesan en
+el repo y en el tiempo de clone, y quedan accesibles por URL a quien la adivine.
+
+| Qué | Peso | Por qué sigue ahí |
+|---|---|---|
+| `images/img2.png`, `img3.png`, `img4.png` | 3,5 MB | Son los **originales** de la galería: `npm run optimizar:imagenes` los necesita para regenerar los WebP. Borrarlos deja el build sin fuente. (`img1.png` además arma el `og.jpg`.) |
+| `marca/` (34 de 42 archivos) | 3,2 MB | Variantes de logo, patrones e isotipos que el sitio no usa. Se conservan como material de marca. |
+| `assets/polish2.webp` | 21 KB | Quedó sin referencia al eliminar la clase huérfana `.mancha-bottom-left`. Se puede borrar junto con su línea en `tools/optimizar-imagenes.mjs`, o volver a usar la mancha en alguna sección. |
+| `fonts/` (19 de 26 archivos) | ~835 KB | Pesos que el diseño no usa hoy. Se pueden podar, con el riesgo de que si mañana se usa uno el navegador falsifique la variante y se vea peor. |
+
+### Otros
 - **`marca/` se publica igual.** `robots.txt` pide no rastrearla, pero eso es un pedido a los
   buscadores, no un bloqueo: sigue accesible por URL. Se bloquea con una regla en `netlify.toml`.
 - **La `<meta name="description">` dice "nail studio en Salta, Argentina"** y ese texto ahora
@@ -626,7 +674,9 @@ desincronizado si se edita el HTML sin recompilar. Por eso los scripts `build:cs
 
 ## 📞 Contacto
 
-Reservas y consultas por WhatsApp desde el propio sitio (botones de cada servicio y sección de contacto).
+Los botones de WhatsApp del sitio (los de cada servicio y el del footer) apuntan al número
+del desarrollador. Al ser una pieza de portfolio, las consultas llegan a **ARG Systems**, no
+a un estudio en actividad; el footer lo aclara en pantalla.
 
 ## 📄 Licencia
 
